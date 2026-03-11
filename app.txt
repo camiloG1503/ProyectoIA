@@ -1,0 +1,106 @@
+La aplicación no solo enseñará qué es la Inteligencia Artificial, sino que buscará que el usuario aprenda a utilizarla de manera estratégica en su vida académica y profesional.
+
+El objetivo es que el usuario comprenda que la IA no es simplemente una herramienta para copiar y pegar información, sino un aliado creativo y productivo que puede potenciar su imaginación, mejorar su capacidad de resolver problemas y aumentar su eficiencia en el trabajo.
+
+A través de lecciones interactivas y dinámicas tipo juego, el usuario aprenderá a:
+
+Comprender qué es realmente la Inteligencia Artificial.
+
+Utilizar la IA para crear ideas, investigar, analizar y construir soluciones.
+
+Integrar la IA como una herramienta de apoyo para mejorar su desempeño profesional.
+
+Desarrollar una mentalidad crítica sobre el uso responsable de la tecnología.
+
+De esta manera, la aplicación busca que los usuarios vean la IA como una extensión de su creatividad y conocimiento, capaz de llevar sus proyectos, estudios o profesión a un nivel más alto.
+
+Este enfoque contribuye directamente al Organización de las Naciones Unidas ODS 4: Educación de calidad, promoviendo el acceso a herramientas tecnológicas que fortalecen el aprendizaje y el desarrollo de habilidades para el futuro.
+
+
+
+esta es mi app algo estilo duolingo pero con mi excensia no es copiar por copiar 
+cambiar colores 
+
+colores quiero para mi app 
+#193CB8
+#372AAC
+#372AAC
+#42D3F2
+#53EAFD
+#46ECD5
+#6E11B0
+#1E1A4D
+#615FFF
+#4D179A
+
+debo cumplir con estos objetivo
+🎯 Objetivo del proyecto
+Desarrollar una aplicación móvil multiplataforma en React Native (JS) que implemente:
+
+Arquitectura organizada
+
+Navegación profesional (Stack)
+
+Mínimo 3 pantallas funcionales
+
+Uso de route params
+
+Diseño responsivo
+
+Base optimizada (FlatList / buenas prácticas)
+
+Este proyecto se irá ampliando durante el semestre.
+
+🧠 Temas que deben aplicar (lo visto hasta ahora)
+✔ Programación responsiva
+✔ Navegación con Stack
+✔ Route Params
+✔ Organización profesional de carpetas
+✔ FlatList vs ScrollView
+✔ Optimización básica
+✔ React.memo / useMemo / useCallback (cuando aplique)
+
+🧩 Requerimientos obligatorios (Fase 1)
+1️⃣ Arquitectura del proyecto
+Debe existir la siguiente estructura:
+
+/src
+   /navigation
+   /screens
+   /components
+   /utils (opcional)
+No se permite tener todo en App.js.
+
+2️⃣ Navegación
+Implementar Stack Navigator
+
+Mínimo 3 pantallas:
+
+Home
+
+Details
+
+Profile o Settings
+
+3️⃣ Route Params
+Enviar datos de Home → Details
+
+Enviar datos de Details → Profile
+
+Mostrar correctamente los datos recibidos
+
+4️⃣ Responsividad
+No usar tamaños fijos innecesarios
+
+Adaptar layout a diferentes tamaños
+
+Usar flex, useWindowDimensions() o breakpoints
+
+5️⃣ Lista optimizada
+Al menos una pantalla debe tener:
+
+FlatList (no ScrollView + map)
+
+keyExtractor correcto
+
+Optimización básica aplicada
