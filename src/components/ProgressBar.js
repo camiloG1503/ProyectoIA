@@ -1,66 +1,81 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { COLORS } from '../utils/colors';
+import React, { useEffect, useRef } from "react";
+import { View, Text, StyleSheet, Animated } from "react-native";
 
-const ProgressBar = ({ current, total, color = COLORS.primary }) => {
-    const percentage = total > 0 ? (current / total) * 100 : 0;
+const ProgressBar = ({ current, total, color }) => {
+    const progress = total === 0 ? 0 : current / total;
+
+    const widthAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.timing(widthAnim, {
+            toValue: progress,
+            duration: 600,
+            useNativeDriver: false,
+        }).start();
+    }, [progress]);
+
+    const widthInterpolated = widthAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: ["0%", "100%"],
+    });
 
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.label}>Progreso general</Text>
-                <Text style={styles.stats}>{current} / {total} lecciones</Text>
+            <View style={styles.info}>
+                <Text style={styles.label}>Progreso del curso</Text>
+
+                <Text style={styles.percent}>{Math.round(progress * 100)}%</Text>
             </View>
 
-            <View style={styles.barContainer}>
-                <View
+            <View style={styles.barBackground}>
+                <Animated.View
                     style={[
                         styles.barFill,
-                        { width: `${percentage}%`, backgroundColor: color }
+                        {
+                            width: widthInterpolated,
+                            backgroundColor: color,
+                        },
                     ]}
                 />
             </View>
-
-            <Text style={styles.percentage}>{Math.round(percentage)}% completado</Text>
         </View>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        width: '100%',
+        width: "100%",
     },
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 8,
+
+    info: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginBottom: 6,
     },
+
     label: {
         fontSize: 14,
-        fontWeight: '600',
-        color: COLORS.text,
+        color: "#374151",
+        fontWeight: "600",
     },
-    stats: {
+
+    percent: {
         fontSize: 14,
-        color: COLORS.textLight,
+        color: "#374151",
+        fontWeight: "700",
     },
-    barContainer: {
-        width: '100%',
+
+    barBackground: {
+        width: "100%",
         height: 10,
-        backgroundColor: COLORS.light,
-        borderRadius: 5,
-        overflow: 'hidden',
+        backgroundColor: "#E5E7EB",
+        borderRadius: 6,
+        overflow: "hidden",
     },
+
     barFill: {
-        height: '100%',
-        borderRadius: 5,
-    },
-    percentage: {
-        fontSize: 12,
-        color: COLORS.textLight,
-        marginTop: 4,
-        textAlign: 'center',
+        height: "100%",
+        borderRadius: 6,
     },
 });
 

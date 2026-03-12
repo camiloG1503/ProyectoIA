@@ -1,60 +1,68 @@
-import React from 'react';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from '../screens/HomeScreen';
-import DetailsScreen from '../screens/DetailsScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import { COLORS } from '../utils/colors';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { TouchableOpacity, Text } from "react-native";
 
-const Stack = createNativeStackNavigator();
+import HomeScreen from "../screens/HomeScreen";
+import DetailsScreen from "../screens/DetailsScreen";
+import LessonContentScreen from "../screens/LessonContentScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import CompletedScreen from "../screens/CompletedScreen";
+
+import { COLORS } from "../utils/colors";
+
+const Stack = createStackNavigator();
 
 const AppNavigator = () => {
     return (
         <Stack.Navigator
-            initialRouteName="Home"
-            screenOptions={{
+            screenOptions={({ navigation }) => ({
                 headerStyle: {
                     backgroundColor: COLORS.primary,
                 },
-                headerTintColor: COLORS.white,
-                headerTitleStyle: {
-                    fontWeight: 'bold',
-                    fontSize: 18,
-                },
-                headerShadowVisible: true,
-                animation: 'slide_from_right',
-            }}
+
+                headerTintColor: "#fff",
+
+                headerRight: () => (
+                    <TouchableOpacity
+                        onPress={() => navigation.navigate("Profile")}
+                        style={{ marginRight: 15 }}
+                    >
+                        <Text style={{ color: "white", fontSize: 18 }}>👤</Text>
+                    </TouchableOpacity>
+                ),
+            })}
         >
             <Stack.Screen
                 name="Home"
                 component={HomeScreen}
-                options={{
-                    title: '🎓 IA Estratégica',
-                    headerStyle: {
-                        backgroundColor: COLORS.darkBg,
-                    },
-                }}
+                options={{ title: "🎓 IA Learning" }}
             />
 
             <Stack.Screen
                 name="Details"
                 component={DetailsScreen}
-                options={({ route }) => ({
-                    title: route.params?.lesson?.title || 'Detalles',
-                    headerStyle: {
-                        backgroundColor: route.params?.lesson?.color || COLORS.primary,
-                    },
-                })}
+                options={{ title: "Detalles de la Lección" }}
+            />
+
+            <Stack.Screen
+                name="LessonContent"
+                component={LessonContentScreen}
+                options={{ title: "Contenido de la Lección" }}
+            />
+
+            <Stack.Screen
+                name="Completed"
+                component={CompletedScreen}
+                options={{
+                    title: "Lección completada",
+                    headerLeft: null,
+                }}
             />
 
             <Stack.Screen
                 name="Profile"
                 component={ProfileScreen}
-                options={{
-                    title: '👤 Mi Perfil',
-                    headerStyle: {
-                        backgroundColor: COLORS.primary,
-                    },
-                }}
+                options={{ title: "Perfil" }}
             />
         </Stack.Navigator>
     );
