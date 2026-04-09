@@ -5,6 +5,7 @@ import {
     StyleSheet,
     TouchableOpacity,
     useWindowDimensions,
+    Platform,
 } from "react-native";
 
 import { MaterialIcons } from "@expo/vector-icons";
@@ -45,7 +46,6 @@ const LessonCard = React.memo(
                     </View>
 
                     {/* BARRA DE PROGRESO */}
-
                     <View style={styles.progressBarBackground}>
                         <View
                             style={[
@@ -80,11 +80,17 @@ const styles = StyleSheet.create({
         padding: 18,
         marginBottom: 16,
         flexDirection: "row",
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
-        elevation: 5,
+        ...Platform.select({
+            ios: {
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.1,
+                shadowRadius: 10,
+            },
+            android: {
+                elevation: 8,
+            },
+        }),
     },
 
     completedCard: {

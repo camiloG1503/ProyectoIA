@@ -7,6 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
   RefreshControl,
+  Platform,
+  Alert,
 } from "react-native";
 import { loadProgress, resetProgress } from "../utils/storage";
 import { lessonsData } from "../utils/lessonsData";
@@ -36,9 +38,31 @@ const ProfileScreen = () => {
     setRefreshing(false);
   };
 
-  const handleReset = async () => {
+  const performReset = async () => {
     await resetProgress();
     setCompletedLessons([]);
+  };
+
+  const handleReset = () => {
+    if (Platform.OS === "android") {
+      Alert.alert(
+        "Reiniciar progreso",
+        "¿Seguro que deseas borrar todo tu avance?",
+        [
+          { text: "Cancelar", style: "cancel" },
+          { text: "Reiniciar", style: "destructive", onPress: performReset },
+        ]
+      );
+    } else {
+      Alert.alert(
+        "Reiniciar progreso",
+        "Esta acción no se puede deshacer.",
+        [
+          { text: "Cancelar", style: "cancel" },
+          { text: "Reiniciar", style: "destructive", onPress: performReset },
+        ]
+      );
+    }
   };
 
   const totalLessons = lessonsData.length;
@@ -64,6 +88,13 @@ const ProfileScreen = () => {
           <Text style={styles.subtitle}>
             Aprendiendo Inteligencia Artificial
           </Text>
+          <View style={styles.osBadge}>
+            <Text style={styles.osText}>
+              {Platform.OS === "ios"
+                ? "📱 iOS · Experiencia fluida"
+                : "🤖 Android · Alto rendimiento"}
+            </Text>
+          </View>
         </View>
 
         {/* PROGRESO */}
@@ -124,11 +155,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#6C63FF",
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.15,
-    shadowRadius: 10,
-    elevation: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.15,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 10,
+      },
+    }),
   },
 
   avatarContainer: {
@@ -139,11 +176,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 5,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
 
   avatar: { fontSize: 60 },
@@ -155,16 +198,35 @@ const styles = StyleSheet.create({
   },
   subtitle: { fontSize: 14, color: "#eee", textAlign: "center" },
 
+  osBadge: {
+    marginTop: 12,
+    backgroundColor: "rgba(0,0,0,0.2)",
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  osText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 14,
+  },
+
   progressCard: {
     backgroundColor: "#fff",
     margin: 20,
     padding: 20,
     borderRadius: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 5,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   cardTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
   progressText: { marginTop: 10, color: COLORS.textLight },
@@ -187,11 +249,17 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 16,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.08,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   statNumber: { fontSize: 22, fontWeight: "bold", color: COLORS.primary },
   statLabel: {

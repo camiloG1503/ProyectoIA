@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   RefreshControl,
   useWindowDimensions,
+  Platform,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -26,9 +28,53 @@ const DetailsScreen = ({ route, navigation }) => {
     setTimeout(() => setRefreshing(false), 500);
   };
 
-  const handleStartLesson = () => {
+  const navigateToLesson = () => {
     navigation.navigate("LessonContent", { lesson, previousScreen: "Details" });
   };
+
+  const handleStartLesson = () => {
+    // Mensaje diferente según plataforma
+    if (Platform.OS === "android") {
+      Alert.alert(
+        "🤖 Android detectado",
+        "¡Prepárate para comenzar la lección en Android!",
+        [{ text: "Continuar", onPress: navigateToLesson }]
+      );
+    } else {
+      Alert.alert(
+        "📱 iOS",
+        "¿Deseas iniciar la lección ahora?",
+        [
+          { text: "Cancelar", style: "cancel" },
+          { text: "Comenzar", onPress: navigateToLesson },
+        ]
+      );
+    }
+  };
+
+  // Estilo del botón según plataforma
+  const buttonStyle = Platform.select({
+    ios: {
+      paddingVertical: 14,
+      borderRadius: 12,
+      backgroundColor: lesson.color,
+    },
+    android: {
+      paddingVertical: 20,
+      borderRadius: 30,
+      backgroundColor: "#FF8C00",
+      elevation: 8,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 5,
+    },
+  });
+
+  const buttonTextStyle = Platform.select({
+    ios: { fontSize: 17, fontWeight: "600" },
+    android: { fontSize: 18, fontWeight: "bold", textTransform: "uppercase" },
+  });
 
   return (
     <SafeAreaView style={styles.container}>
@@ -42,6 +88,9 @@ const DetailsScreen = ({ route, navigation }) => {
           <MaterialIcons name={lesson.icon} size={64} color="#fff" />
           <Text style={styles.title}>{lesson.title}</Text>
           <Text style={styles.subtitle}>{lesson.subtitle}</Text>
+          <Text style={styles.osLabel}>
+            {Platform.OS === "ios" ? "iOS Version" : "Android Version"}
+          </Text>
         </View>
 
         <View style={styles.infoContainer}>
@@ -97,12 +146,15 @@ const DetailsScreen = ({ route, navigation }) => {
       </ScrollView>
 
       <TouchableOpacity
-        style={[styles.button, { backgroundColor: lesson.color }]}
+        style={[styles.buttonBase, buttonStyle]}
         onPress={handleStartLesson}
       >
         <View style={styles.buttonRow}>
           <MaterialIcons name="play-arrow" size={22} color="#fff" />
-          <Text style={styles.buttonText}> Iniciar Lección</Text>
+          <Text style={[styles.buttonTextBase, buttonTextStyle]}>
+            {" "}
+            Iniciar Lección
+          </Text>
         </View>
       </TouchableOpacity>
     </SafeAreaView>
@@ -126,6 +178,13 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   subtitle: { fontSize: 16, color: "#fff", opacity: 0.9 },
+  osLabel: {
+    marginTop: 8,
+    color: "#fff",
+    fontSize: 12,
+    opacity: 0.8,
+    fontStyle: "italic",
+  },
   infoContainer: { flexDirection: "row", gap: 12, marginBottom: 24 },
   infoCard: {
     flex: 1,
@@ -165,9 +224,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   navInfoText: { color: "#fff", textAlign: "center", fontWeight: "600" },
-  button: { padding: 18, borderRadius: 16, alignItems: "center", margin: 20 },
+  buttonBase: {
+    marginHorizontal: 20,
+    marginBottom: 20,
+    alignItems: "center",
+  },
   buttonRow: { flexDirection: "row", alignItems: "center" },
-  buttonText: { fontSize: 18, fontWeight: "bold", color: "#fff" },
+  buttonTextBase: { color: "#fff" },
 });
 
 export default DetailsScreen;

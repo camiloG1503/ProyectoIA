@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   ScrollView,
   RefreshControl,
+  Platform,
 } from "react-native";
 import LessonCard from "../components/LessonCard";
 import { lessonsData } from "../utils/lessonsData";
@@ -36,6 +37,12 @@ const HomeScreen = ({ navigation }) => {
   const percentage =
     totalLessons > 0 ? Math.round((completed / totalLessons) * 100) : 0;
 
+  // Color del header según plataforma
+  const headerBgColor = Platform.select({
+    ios: COLORS.primary,       // iOS: azul corporativo (más sobrio)
+    android: "#FF6B6B",        // Android: color vibrante
+  });
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -45,7 +52,7 @@ const HomeScreen = ({ navigation }) => {
         }
       >
         {/* HEADER */}
-        <View style={styles.header}>
+        <View style={[styles.header, { backgroundColor: headerBgColor }]}>
           <View style={styles.headerIconContainer}>
             <Text style={styles.headerEmoji}>🛰️</Text>
           </View>
@@ -56,6 +63,13 @@ const HomeScreen = ({ navigation }) => {
           <Text style={styles.headerSubtitle}>
             Paso a paso, domina las herramientas del futuro.
           </Text>
+
+          {/* Badge que muestra el sistema operativo */}
+          <View style={styles.osBadge}>
+            <Text style={styles.osText}>
+              {Platform.OS === "ios" ? "📱 iOS" : "🤖 Android"}
+            </Text>
+          </View>
 
           <View style={styles.progressCard}>
             <Text style={styles.progressTitle}>Progreso del curso</Text>
@@ -90,17 +104,22 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.light },
 
   header: {
-    backgroundColor: "#4F46E5",
     paddingVertical: 40,
     paddingHorizontal: 20,
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
-    elevation: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.2,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 10,
+      },
+    }),
   },
 
   headerIconContainer: {
@@ -111,11 +130,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 15,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 5,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
 
   headerEmoji: { fontSize: 50 },
@@ -128,11 +153,25 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: { color: "#eee", lineHeight: 20, textAlign: "center" },
 
+  osBadge: {
+    marginTop: 12,
+    backgroundColor: "rgba(0,0,0,0.2)",
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    borderRadius: 20,
+  },
+  osText: {
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 14,
+  },
+
   progressCard: {
     backgroundColor: "rgba(255,255,255,0.15)",
     marginTop: 20,
     padding: 15,
     borderRadius: 16,
+    width: "100%",
   },
 
   progressTitle: { color: "#fff", fontWeight: "bold", marginBottom: 8 },
