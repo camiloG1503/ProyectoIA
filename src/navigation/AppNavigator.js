@@ -1,27 +1,30 @@
+// navigation/AppNavigator.js
 import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { TouchableOpacity, Text } from "react-native";
+import { TouchableOpacity, Text, Platform } from "react-native";
 
 import HomeScreen from "../screens/HomeScreen";
 import DetailsScreen from "../screens/DetailsScreen";
 import LessonContentScreen from "../screens/LessonContentScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import CompletedScreen from "../screens/CompletedScreen";
+import PWAScreen from "../screens/PWAScreen"; // Asegúrate de que el archivo exista
 
 import { COLORS } from "../utils/colors";
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
+    const headerColor = Platform.select({
+        ios: COLORS.puertoTejadaRed,
+        android: COLORS.primary,
+    });
+
     return (
         <Stack.Navigator
             screenOptions={({ navigation }) => ({
-                headerStyle: {
-                    backgroundColor: COLORS.primary,
-                },
-
+                headerStyle: { backgroundColor: headerColor },
                 headerTintColor: "#fff",
-
                 headerRight: () => (
                     <TouchableOpacity
                         onPress={() => navigation.navigate("Profile")}
@@ -37,19 +40,16 @@ const AppNavigator = () => {
                 component={HomeScreen}
                 options={{ title: "🎓 IA Learning" }}
             />
-
             <Stack.Screen
                 name="Details"
                 component={DetailsScreen}
                 options={{ title: "Detalles de la Lección" }}
             />
-
             <Stack.Screen
                 name="LessonContent"
                 component={LessonContentScreen}
                 options={{ title: "Contenido de la Lección" }}
             />
-
             <Stack.Screen
                 name="Completed"
                 component={CompletedScreen}
@@ -58,11 +58,15 @@ const AppNavigator = () => {
                     headerLeft: null,
                 }}
             />
-
             <Stack.Screen
                 name="Profile"
                 component={ProfileScreen}
                 options={{ title: "Perfil" }}
+            />
+            <Stack.Screen
+                name="PWA"
+                component={PWAScreen}
+                options={{ title: "Mi primera PWA" }}
             />
         </Stack.Navigator>
     );
