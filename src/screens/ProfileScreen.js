@@ -1,3 +1,4 @@
+// screens/ProfileScreen.js
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -12,7 +13,7 @@ import {
 } from "react-native";
 import { loadProgress, resetProgress } from "../utils/storage";
 import { lessonsData } from "../utils/lessonsData";
-import { COLORS } from "../utils/colors";
+import { COLORS, PUERTO_TEJADA } from "../utils/colors";
 import ProgressBar from "../components/ProgressBar";
 
 const ProfileScreen = () => {
@@ -136,6 +137,38 @@ const ProfileScreen = () => {
           </Text>
         </View>
 
+        {/* SECCIÓN IDENTIDAD PUERTO TEJADA (Bandera corregida) */}
+        <View style={styles.localCard}>
+          <View style={styles.flagMini}>
+            <View
+              style={[
+                styles.flagMiniColor,
+                { backgroundColor: COLORS.puertoTejadaRed },
+              ]}
+            />
+            <View
+              style={[
+                styles.flagMiniColor,
+                { backgroundColor: COLORS.puertoTejadaWhite },
+              ]}
+            />
+            <View
+              style={[
+                styles.flagMiniColor,
+                { backgroundColor: COLORS.puertoTejadaGreen },
+              ]}
+            />
+          </View>
+          <Text style={styles.localText}>Puerto Tejada, Cauca</Text>
+          <Text style={styles.localDate}>
+            Fundado: {PUERTO_TEJADA.fundacion}
+          </Text>
+          <Text style={styles.localDescription}>
+            {PUERTO_TEJADA.descripcion}
+          </Text>
+          <Text style={styles.localLema}>{PUERTO_TEJADA.lema}</Text>
+        </View>
+
         {/* BOTÓN RESET */}
         <TouchableOpacity style={styles.resetButton} onPress={handleReset}>
           <Text style={styles.resetText}>Reiniciar progreso</Text>
@@ -152,7 +185,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 40,
     paddingHorizontal: 20,
-    backgroundColor: "#6C63FF",
+    backgroundColor: COLORS.puertoTejadaRed, // Rojo bandera para el header del perfil
     borderBottomLeftRadius: 40,
     borderBottomRightRadius: 40,
     ...Platform.select({
@@ -167,7 +200,6 @@ const styles = StyleSheet.create({
       },
     }),
   },
-
   avatarContainer: {
     width: 100,
     height: 100,
@@ -188,7 +220,6 @@ const styles = StyleSheet.create({
       },
     }),
   },
-
   avatar: { fontSize: 60 },
   username: {
     fontSize: 24,
@@ -197,7 +228,6 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   subtitle: { fontSize: 14, color: "#eee", textAlign: "center" },
-
   osBadge: {
     marginTop: 12,
     backgroundColor: "rgba(0,0,0,0.2)",
@@ -282,6 +312,66 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   motivationText: { color: "#fff", lineHeight: 20 },
+
+  // Tarjeta de identidad Puerto Tejada
+  localCard: {
+    backgroundColor: "#fff",
+    marginHorizontal: 20,
+    marginBottom: 20,
+    padding: 20,
+    borderRadius: 20,
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: COLORS.puertoTejadaLightGreen,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.08,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  flagMini: {
+    flexDirection: "row",
+    width: 120,
+    height: 20,
+    borderRadius: 4,
+    overflow: "hidden",
+    marginBottom: 12,
+  },
+  flagMiniColor: {
+    flex: 1,
+  },
+  localText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: COLORS.puertoTejadaRed,
+    marginBottom: 4,
+  },
+  localDate: {
+    fontSize: 14,
+    color: COLORS.textLight,
+    fontStyle: "italic",
+    marginBottom: 10,
+  },
+  localDescription: {
+    fontSize: 13,
+    color: COLORS.textLight,
+    textAlign: "center",
+    lineHeight: 18,
+    marginBottom: 10,
+    paddingHorizontal: 5,
+  },
+  localLema: {
+    fontSize: 14,
+    color: COLORS.puertoTejadaGreen,
+    fontWeight: "600",
+    marginTop: 4,
+  },
 
   resetButton: {
     backgroundColor: "#ff4d4d",
