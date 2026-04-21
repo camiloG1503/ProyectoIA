@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { StatusBar, Platform } from "react-native";
-import { View, StyleSheet } from "react-native";
+import { Platform } from "react-native";
+import { StatusBar } from "expo-status-bar";
 import AppNavigator from "./src/navigation/AppNavigator";
 
 export default function App() {
@@ -11,38 +11,15 @@ export default function App() {
       try {
         const style = document.createElement("style");
         style.textContent = `
-          html, body {
+          html, body, #root {
             height: 100%;
             width: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden;
-          }
-          
-          #root {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
             overflow-y: auto;
             overflow-x: hidden;
             -webkit-overflow-scrolling: touch;
-          }
-          
-          /* ScrollView en web */
-          [class*="ScrollView"] {
-            overflow-y: auto !important;
-            overflow-x: hidden !important;
-            -webkit-overflow-scrolling: touch;
-          }
-          
-          /* SafeAreaView */
-          [class*="SafeAreaView"] {
-            display: flex;
-            flex: 1;
-            flex-direction: column;
-            width: 100%;
-            height: 100%;
+            overscroll-behavior-y: none;
           }
         `;
         document.head.appendChild(style);

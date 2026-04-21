@@ -8,6 +8,7 @@ import {
   ScrollView,
   RefreshControl,
   Animated,
+  Platform,
 } from "react-native";
 import { COLORS } from "../utils/colors";
 
@@ -33,8 +34,11 @@ const CompletedScreen = ({ route, navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={Platform.OS !== "web"}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          Platform.OS === "web"
+            ? undefined
+            : <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         }
       >
         <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>

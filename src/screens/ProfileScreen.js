@@ -77,7 +77,9 @@ const ProfileScreen = () => {
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          Platform.OS === "web"
+            ? undefined
+            : <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         }
       >
         {/* HEADER */}

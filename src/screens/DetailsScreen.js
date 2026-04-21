@@ -80,8 +80,11 @@ const DetailsScreen = ({ route, navigation }) => {
     <SafeAreaView style={styles.container}>
       <ScrollView
         contentContainerStyle={[styles.content, { padding }]}
+        showsVerticalScrollIndicator={Platform.OS !== "web"}
         refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+          Platform.OS === "web"
+            ? undefined
+            : <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
         }
       >
         <View style={[styles.header, { backgroundColor: lesson.color }]}>

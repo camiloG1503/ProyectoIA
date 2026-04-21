@@ -362,24 +362,4 @@ const styles = StyleSheet.create({
   },
 });
 
-footer: {
-  paddingVertical: 20,
-    paddingHorizontal: 16,
-      alignItems: "center",
-        borderTopWidth: 1,
-          borderTopColor: "#E5E7EB",
-            marginTop: 10,
-  },
-footerText: {
-  fontSize: 14,
-    fontWeight: "600",
-      color: COLORS.puertoTejadaGreen,
-  },
-footerSmall: {
-  fontSize: 12,
-    color: COLORS.textLight,
-      marginTop: 4,
-  },
-});
-
 export default HomeScreen;
