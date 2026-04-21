@@ -5,7 +5,7 @@ import { TouchableOpacity, Text, Platform } from "react-native";
 
 import HomeScreen from "../screens/HomeScreen";
 import DetailsScreen from "../screens/DetailsScreen";
-import LessonContentScreen from "../screens/LessonContentScreen";
+import LessonContentScreen from "../screens/RequirementFlowScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import CompletedScreen from "../screens/CompletedScreen";
 import ChatBot_Ayuda from "../screens/ChatBot_Ayuda";

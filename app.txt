@@ -1,0 +1,32 @@
+Paso 1 – Ingresa a la aplicación
+Actividad: El estudiante abre la app web desde su celular o computador.
+Criterio: Móvil / Digital
+Por qué:  Porque el estudiante accede desde su celular, incluso con datos móviles. La app es responsiva y no requiere computador de alta gama.
+
+Paso 2 – Descarga el manual PDF
+Actividad: El estudiante descarga un archivo PDF con el manual de uso del curso y material de la unidad 1 (guía de introducción a la IA).
+Criterio: Económico + Simple
+Por qué:  La descarga no cuesta datos excesivos (archivo liviano, < 2 MB) y es gratuita.
+
+Paso 3 – Diagnóstico inicial
+Actividad: Responde 5 preguntas sobre cómo usa hoy la IA (copia/pega, dudas, etc.).
+Criterio: Enfoque humano + Simple
+Por qué:  Las preguntas están redactadas en lenguaje cotidiano, con ejemplos que los estudiantes de Puerto Tejada reconocen (ej. “¿Usas ChatGPT para copiar tareas de sociales?”). No requieren conocimientos previos. Son solo 5 preguntas de opción múltiple. Cada pregunta en una pantalla. Se responde con un toque. Al final, se muestra un mensaje de retroalimentación amable (sin puntajes castigadores).
+
+Paso 4 – Lee los fundamentos sobre IA
+Actividad:  El estudiante lee una lectura breve (3-5 párrafos) sobre qué es la IA, qué no es, y su uso ético.
+Criterio: Ligero + Enfoque humano
+Por qué:  La lectura ocupa menos de 1 MB, se carga al instante. El texto está fragmentado en párrafos cortos y con subtítulos. No hay videos pesados en este paso. El lenguaje es claro, evita tecnicismos. Incluye ejemplos locales (ej. “La IA puede ayudar a un agricultor de Cauca a predecir lluvias”). Además, hay opción de escuchar el texto (texto a voz) para estudiantes con dificultades de lectura.
+
+
+
+Paso 5 – Practica con un ejercicio (mejorar un prompt)
+Actividad: El estudiante recibe un prompt mal hecho (ej. “Hazme una tarea”) y debe mejorarlo usando la estructura Rol + Tarea + Contexto + Formato.
+Criterio: Simple + Enfoque humano
+Por qué:  La interfaz tiene solo dos áreas: el prompt original (no editable) y un cuadro de texto para escribir el nuevo prompt. Un botón “Verificar” da retroalimentación automática. La retroalimentación es alentadora y específica (ej. “Te falta el contexto. ¿Para qué materia es?”). No hay respuestas incorrectas absolutas, sino sugerencias para mejorar.
+
+Paso 6 – Obtiene insignia y certificado (ODS)
+
+Actividad: Al completar el módulo, el estudiante obtiene una insignia digital (PDF con código QR) que certifica “Prompter crítico – Uso ético de IA”.
+ODS 4 – Educación de Calidad 
+Por qué: Porque el curso garantiza que jóvenes de Puerto Tejada reciban formación equitativa, inclusiva y alineada con las demandas del siglo XXI (uso crítico de IA). Reduce la brecha digital y mejora la empleabilidad futura.
