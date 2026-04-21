@@ -136,7 +136,7 @@ const HomeScreen = ({ navigation }) => {
               key={lesson.id}
               lesson={lesson}
               isCompleted={completedLessons.includes(lesson.id)}
-              onPress={() => navigation.navigate("Details", { lesson })}
+              onPress={() => navigation.navigate("Details", { lesson, previousScreen: "Home" })}
             />
           ))}
         </View>

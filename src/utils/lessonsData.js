@@ -64,6 +64,14 @@ export const lessonsData = [
         stepType: "reading",
         description:
             "Lee una explicación breve sobre qué es la IA, qué no es y cómo usarla con criterio ético.",
+        content: {
+            paragraphs: [
+                "La Inteligencia Artificial es una tecnología que ayuda a las personas a resolver tareas, analizar información y crear contenido. No piensa como una persona, pero sí puede aprender patrones a partir de muchos datos.",
+                "La IA no está hecha para reemplazar tu criterio. Su mejor uso ocurre cuando la usas como apoyo para estudiar, organizar ideas o comprender temas difíciles con ejemplos sencillos.",
+                "En lugares como Puerto Tejada o en zonas agrícolas del Cauca, la IA puede servir para predecir lluvias, apoyar negocios locales o explicar contenidos escolares con lenguaje claro y cercano.",
+                "Usarla bien también implica responsabilidad: revisar la información, proteger los datos personales y evitar copiar sin entender. Así la IA se convierte en una aliada para aprender mejor.",
+            ],
+        },
         topics: [
             "3 a 5 párrafos cortos",
             "Ejemplos locales de Cauca",

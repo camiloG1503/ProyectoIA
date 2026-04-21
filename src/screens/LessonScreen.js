@@ -58,7 +58,7 @@ const LessonScreen = ({ navigation }) => {
                             <TouchableOpacity
                                 key={lesson.id}
                                 style={[styles.lessonCard, completed && styles.completedCard]}
-                                onPress={() => navigation.navigate("Details", { lesson })}
+                                onPress={() => navigation.navigate("Details", { lesson, previousScreen: "Home" })}
                             >
                                 <Text style={styles.lessonTitle}>
                                     {lesson.icon} {lesson.title}
