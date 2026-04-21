@@ -1,6 +1,5 @@
 // screens/HomeScreen.js
 import React, { useEffect, useState } from "react";
-import { TouchableOpacity } from "react-native";
 import {
   View,
   Text,
@@ -48,10 +47,15 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={Platform.OS !== "web"}
+        scrollEnabled={true}
+        bounces={true}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        contentContainerStyle={styles.scrollContent}
+        style={styles.scroll}
+        nestedScrollEnabled
       >
         {/* HEADER PRINCIPAL */}
         <View style={[styles.header, { backgroundColor: headerBgColor }]}>
@@ -163,8 +167,19 @@ const HomeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: COLORS.light },
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.light
+  },
 
+  scroll: {
+    flex: 1,
+    width: "100%",
+  },
+
+  scrollContent: {
+    flexGrow: 1,
+  },
   header: {
     paddingVertical: 40,
     paddingHorizontal: 20,
