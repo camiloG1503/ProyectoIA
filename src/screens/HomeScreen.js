@@ -27,18 +27,6 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     loadUserProgress();
-    
-    // Inyectar CSS para scroll en web
-    if (Platform.OS === "web") {
-      const style = document.createElement("style");
-      style.textContent = `
-        [data-testid="ScrollView"] {
-          overflow-y: auto !important;
-          max-height: 100vh !important;
-        }
-      `;
-      document.head.appendChild(style);
-    }
   }, []);
 
   const onRefresh = async () => {

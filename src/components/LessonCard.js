@@ -1,5 +1,5 @@
 // components/LessonCard.js
-import React from "react";
+import React, { useMemo } from "react";
 import {
     View,
     Text,
@@ -15,8 +15,14 @@ const LessonCard = React.memo(
     ({ lesson, onPress, isLandscape = false, isCompleted = false }) => {
         const { width } = useWindowDimensions();
 
-        const cardWidth = isLandscape ? "48%" : width > 600 ? "48%" : "100%";
-        const progress = lesson.progress ?? (isCompleted ? 100 : 0);
+        const cardWidth = useMemo(() => {
+            if (isLandscape) return "48%";
+            return width > 600 ? "48%" : "100%";
+        }, [width, isLandscape]);
+
+        const progress = useMemo(() => {
+            return lesson.progress ?? (isCompleted ? 100 : 0);
+        }, [lesson.progress, isCompleted]);
 
         return (
             <TouchableOpacity
