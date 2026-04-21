@@ -27,6 +27,18 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     loadUserProgress();
+    
+    // Inyectar CSS para scroll en web
+    if (Platform.OS === "web") {
+      const style = document.createElement("style");
+      style.textContent = `
+        [data-testid="ScrollView"] {
+          overflow-y: auto !important;
+          max-height: 100vh !important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
   }, []);
 
   const onRefresh = async () => {
@@ -169,7 +181,8 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.light
+    backgroundColor: COLORS.light,
+    width: "100%",
   },
 
   scroll: {
@@ -179,6 +192,7 @@ const styles = StyleSheet.create({
 
   scrollContent: {
     flexGrow: 1,
+    flexBasis: "auto",
   },
   header: {
     paddingVertical: 40,
