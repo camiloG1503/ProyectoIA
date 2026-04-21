@@ -49,13 +49,9 @@ const HomeScreen = ({ navigation }) => {
       <ScrollView
         showsVerticalScrollIndicator={Platform.OS !== "web"}
         scrollEnabled={true}
-        bounces={true}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
+        refreshControl={Platform.OS === "web" ? undefined : <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
         contentContainerStyle={styles.scrollContent}
         style={styles.scroll}
-        nestedScrollEnabled
       >
         {/* HEADER PRINCIPAL */}
         <View style={[styles.header, { backgroundColor: headerBgColor }]}>
@@ -330,18 +326,22 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: "center",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 8,
-    zIndex: 100,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
   fabIcon: {
     fontSize: 30,
     color: "#fff",
   },
-
   footer: {
     paddingVertical: 20,
     paddingHorizontal: 16,
@@ -359,7 +359,26 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.textLight,
     marginTop: 4,
+  },
+});
 
+footer: {
+  paddingVertical: 20,
+    paddingHorizontal: 16,
+      alignItems: "center",
+        borderTopWidth: 1,
+          borderTopColor: "#E5E7EB",
+            marginTop: 10,
+  },
+footerText: {
+  fontSize: 14,
+    fontWeight: "600",
+      color: COLORS.puertoTejadaGreen,
+  },
+footerSmall: {
+  fontSize: 12,
+    color: COLORS.textLight,
+      marginTop: 4,
   },
 });
 
