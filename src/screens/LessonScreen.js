@@ -1,3 +1,4 @@
+// screens/LessonScreen.js
 import React, { useEffect, useState } from "react";
 import {
     View,
@@ -11,7 +12,16 @@ import {
 } from "react-native";
 import { loadProgress } from "../utils/storage";
 import { lessonsData } from "../utils/lessonsData";
-import { COLORS } from "../utils/colors";
+import { COLORS, RADIUS, SPACING, SHADOWS } from "../utils/colors";
+
+// ─── Franja tricolor institucional ─────────────────────────────────────────────
+const TricolorStripe = ({ height = 6 }) => (
+    <View style={{ flexDirection: "row", height }}>
+        <View style={{ flex: 1, backgroundColor: COLORS.puertoTejadaRed }} />
+        <View style={{ flex: 1, backgroundColor: COLORS.puertoTejadaWhite }} />
+        <View style={{ flex: 1, backgroundColor: COLORS.puertoTejadaGreen }} />
+    </View>
+);
 
 const LessonScreen = ({ navigation }) => {
     const [completedLessons, setCompletedLessons] = useState([]);
@@ -34,12 +44,17 @@ const LessonScreen = ({ navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
+            <TricolorStripe />
             <ScrollView
                 showsVerticalScrollIndicator={Platform.OS !== "web"}
                 refreshControl={
                     Platform.OS === "web"
                         ? undefined
-                        : <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+                        : <RefreshControl 
+                            refreshing={refreshing} 
+                            onRefresh={handleRefresh} 
+                            colors={[COLORS.puertoTejadaRed]} 
+                          />
                 }
             >
                 <View style={styles.header}>
@@ -47,7 +62,7 @@ const LessonScreen = ({ navigation }) => {
                         🧠 Aprende Inteligencia Artificial
                     </Text>
                     <Text style={styles.headerSubtitle}>
-                        Aprende IA paso a paso y domina las herramientas del futuro
+                        Aprende IA paso a paso y domina las herramientas del futuro para Puerto Tejada
                     </Text>
                 </View>
 
@@ -57,15 +72,31 @@ const LessonScreen = ({ navigation }) => {
                         return (
                             <TouchableOpacity
                                 key={lesson.id}
-                                style={[styles.lessonCard, completed && styles.completedCard]}
+                                style={[
+                                    styles.lessonCard, 
+                                    completed && styles.completedCard
+                                ]}
+                                activeOpacity={0.8}
                                 onPress={() => navigation.navigate("Details", { lesson, previousScreen: "Home" })}
                             >
-                                <Text style={styles.lessonTitle}>
-                                    {lesson.icon} {lesson.title}
-                                </Text>
-                                <Text style={styles.lessonSubtitle}>
-                                    {completed ? "✅ Completada" : lesson.subtitle}
-                                </Text>
+                                <View style={styles.cardContent}>
+                                    <View style={styles.infoArea}>
+                                        <Text style={styles.lessonTitle}>
+                                            {lesson.icon} {lesson.title}
+                                        </Text>
+                                        <Text style={[
+                                            styles.lessonSubtitle,
+                                            completed && styles.completedText
+                                        ]}>
+                                            {completed ? "✅ Lección completada con éxito" : lesson.subtitle}
+                                        </Text>
+                                    </View>
+                                    {completed && (
+                                        <View style={styles.badge}>
+                                            <Text style={styles.badgeText}>LISTO</Text>
+                                        </View>
+                                    )}
+                                </View>
                             </TouchableOpacity>
                         );
                     })}
@@ -76,36 +107,82 @@ const LessonScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: { flex: 1, backgroundColor: COLORS.light },
+    container: {
+        flex: 1,
+        backgroundColor: COLORS.background,
+    },
     header: {
-        padding: 20,
-        backgroundColor: COLORS.primary,
-        borderBottomLeftRadius: 30,
-        borderBottomRightRadius: 30,
+        padding: SPACING.lg,
+        backgroundColor: COLORS.puertoTejadaRed,
+        borderBottomLeftRadius: RADIUS.xl,
+        borderBottomRightRadius: RADIUS.xl,
+        ...SHADOWS.card,
     },
     headerTitle: {
         fontSize: 24,
-        fontWeight: "bold",
+        fontWeight: "800",
         color: "#fff",
-        marginBottom: 6,
+        marginBottom: 8,
+        letterSpacing: -0.5,
     },
-    headerSubtitle: { fontSize: 14, color: "#eee", lineHeight: 20 },
-
-    lessonsContainer: { padding: 20 },
+    headerSubtitle: {
+        fontSize: 14,
+        color: "rgba(255,255,255,0.9)",
+        lineHeight: 20,
+        fontWeight: "500",
+    },
+    lessonsContainer: {
+        padding: SPACING.md,
+        paddingTop: SPACING.lg,
+    },
     lessonCard: {
-        backgroundColor: "#fff",
-        padding: 20,
-        borderRadius: 16,
-        marginBottom: 12,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 6,
-        elevation: 3,
+        backgroundColor: COLORS.surface,
+        padding: SPACING.md,
+        borderRadius: RADIUS.lg,
+        marginBottom: SPACING.md,
+        borderWidth: 1,
+        borderColor: COLORS.border,
+        ...SHADOWS.card,
     },
-    completedCard: { backgroundColor: "#d4ffd4" },
-    lessonTitle: { fontSize: 18, fontWeight: "bold", marginBottom: 6 },
-    lessonSubtitle: { fontSize: 14, color: COLORS.textLight },
+    completedCard: {
+        backgroundColor: COLORS.puertoTejadaLightGreen,
+        borderColor: COLORS.puertoTejadaGreen + "40",
+    },
+    cardContent: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    infoArea: {
+        flex: 1,
+    },
+    lessonTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: COLORS.text,
+        marginBottom: 4,
+    },
+    lessonSubtitle: {
+        fontSize: 14,
+        color: COLORS.textLight,
+        lineHeight: 18,
+    },
+    completedText: {
+        color: COLORS.puertoTejadaGreen,
+        fontWeight: "600",
+    },
+    badge: {
+        backgroundColor: COLORS.puertoTejadaGreen,
+        paddingHorizontal: 10,
+        paddingVertical: 4,
+        borderRadius: RADIUS.sm,
+        marginLeft: 10,
+    },
+    badgeText: {
+        color: "#fff",
+        fontSize: 10,
+        fontWeight: "900",
+    },
 });
 
 export default LessonScreen;

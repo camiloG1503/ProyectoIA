@@ -1,9 +1,10 @@
+// components/ProgressBar.js
 import React, { useEffect, useRef } from "react";
 import { View, Text, StyleSheet, Animated } from "react-native";
+import { COLORS, RADIUS } from "../utils/colors";
 
 const ProgressBar = ({ current, total, color }) => {
     const progress = total === 0 ? 0 : current / total;
-
     const widthAnim = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
@@ -23,7 +24,6 @@ const ProgressBar = ({ current, total, color }) => {
         <View style={styles.container}>
             <View style={styles.info}>
                 <Text style={styles.label}>Progreso del curso</Text>
-
                 <Text style={styles.percent}>{Math.round(progress * 100)}%</Text>
             </View>
 
@@ -33,7 +33,7 @@ const ProgressBar = ({ current, total, color }) => {
                         styles.barFill,
                         {
                             width: widthInterpolated,
-                            backgroundColor: color,
+                            backgroundColor: color || COLORS.puertoTejadaGreen,
                         },
                     ]}
                 />
@@ -45,37 +45,34 @@ const ProgressBar = ({ current, total, color }) => {
 const styles = StyleSheet.create({
     container: {
         width: "100%",
+        marginVertical: 10,
     },
-
     info: {
         flexDirection: "row",
         justifyContent: "space-between",
-        marginBottom: 6,
+        alignItems: "center",
+        marginBottom: 8,
     },
-
     label: {
         fontSize: 14,
-        color: "#374151",
+        color: COLORS.text,
         fontWeight: "600",
     },
-
     percent: {
         fontSize: 14,
-        color: "#374151",
-        fontWeight: "700",
+        color: COLORS.text,
+        fontWeight: "800",
     },
-
     barBackground: {
         width: "100%",
         height: 10,
-        backgroundColor: "#E5E7EB",
-        borderRadius: 6,
+        backgroundColor: COLORS.surfaceAlt || "#E5E7EB",
+        borderRadius: RADIUS.pill,
         overflow: "hidden",
     },
-
     barFill: {
         height: "100%",
-        borderRadius: 6,
+        borderRadius: RADIUS.pill,
     },
 });
 

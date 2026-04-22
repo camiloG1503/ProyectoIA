@@ -1,252 +1,318 @@
 import React, { useState, useRef } from "react";
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
+    View,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    ScrollView,
+    StyleSheet,
+    KeyboardAvoidingView,
+    Platform,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { COLORS, RADIUS, SPACING, SHADOWS } from "../utils/colors";
 
-//ESTRUCTURA DINÁMICA: Múltiples respuestas por cada intención
+// 1. BASE DE CONOCIMIENTO (Sincronizada con las sugerencias)
 const baseConocimiento = [
-  {
-    palabras: [
-      "uso",
-      "utilizar",
-      "funciona",
-      "funcionalidad",
-      "empezar",
-      "iniciar",
-    ],
-    respuestas: [
-      "Puedes usar el curso navegando por las unidades y completando las lecciones a tu ritmo.",
-      "¡Es súper fácil! Solo elige una unidad en el menú principal y comienza a interactuar con las lecciones.",
-      "El curso está diseñado para que avances paso a paso. Selecciona el primer módulo para arrancar.",
-    ],
-  },
-  {
-    palabras: ["unidades", "temas", "contenido", "aprender", "temario"],
-    respuestas: [
-      "El curso está dividido en varias unidades, cada una centrada en un concepto clave de la Inteligencia Artificial.",
-      "Encontrarás módulos interactivos que van desde los fundamentos de la IA hasta casos de uso prácticos.",
-      "Revisa la pantalla principal para explorar todo el temario y las unidades que tenemos para ti.",
-    ],
-  },
-  {
-    palabras: [
-      "navegar",
-      "moverme",
-      "ir a",
-      "como entro",
-      "avanzar",
-      "retroceder",
-    ],
-    respuestas: [
-      "Utiliza el menú inferior o los botones en pantalla para navegar entre las secciones del curso.",
-      "Puedes moverte libremente usando la barra de navegación o saltar al siguiente tema al terminar una lección.",
-      "La navegación es sencilla: desliza o usa los botones de 'Siguiente' y 'Atrás' en cada unidad interactiva.",
-    ],
-  },
-  {
-    palabras: ["recomendaciones", "consejos", "tips", "estudio", "mejor"],
-    respuestas: [
-      "Te recomendamos estudiar de manera constante y jugar con todas las simulaciones interactivas.",
-      "Un buen tip: no te saltes los ejercicios prácticos. ¡La IA se entiende mejor haciendo pruebas!",
-      "Tómalo con calma, repasa los conceptos si es necesario y aprovecha el contenido interactivo de cada lección.",
-    ],
-  },
-  {
-    palabras: [
-      "previos",
-      "conocimientos",
-      "saber antes",
-      "requisitos",
-      "preparacion",
-    ],
-    respuestas: [
-      "No necesitas conocimientos previos de programación, pero tener curiosidad por la tecnología te ayudará muchísimo.",
-      "¡Empezamos desde cero! Cualquier persona con ganas de aprender sobre IA puede tomar este curso.",
-      "El único requisito es tener ganas de aprender. Nosotros te guiaremos paso a paso por los conceptos.",
-    ],
-  },
-  {
-    palabras: ["progreso", "motivacion", "avance", "seguir", "certificado"],
-    respuestas: [
-      "¡Sigue avanzando! Cada pequeña lección te acerca a dominar las bases de la Inteligencia Artificial.",
-      "Tu progreso se guarda automáticamente. ¡No te rindas, lo estás haciendo genial!",
-    ],
-  },
+    {
+        palabras: ["empezar", "inicio", "comenzar", "empiezo", "donde"],
+        respuestas: [
+            "¡Es muy fácil! Ve a la pantalla principal, elige la Unidad 1 y pulsa el botón 'Empezar lección'.",
+            "Te recomiendo iniciar por el módulo de 'Fundamentos'. Solo toca una tarjeta en el inicio para arrancar.",
+        ],
+    },
+    {
+        palabras: ["unidades", "temas", "aprender", "contenido", "modulos"],
+        respuestas: [
+            "Aprenderás sobre Historia de la IA, Chatbots, Generación de Imágenes y Ética Digital.",
+            "El curso tiene 5 unidades interactivas diseñadas para que aprendas desde cero.",
+        ],
+    },
+    {
+        palabras: ["consejos", "tips", "estudio", "ayuda", "mejor"],
+        respuestas: [
+            "Mi mejor consejo: lee despacio y no te saltes los ejercicios prácticos al final de cada tema.",
+            "Tómate tu tiempo. Si no entiendes algo, puedes volver a ver la lección las veces que quieras.",
+        ],
+    },
+    {
+        palabras: ["requisitos", "saber", "previos", "preparacion"],
+        respuestas: [
+            "No necesitas saber nada previo. Este curso de la Institución está diseñado para principiantes.",
+            "¡Solo necesitas curiosidad! Empezamos explicando qué es la tecnología desde lo más básico.",
+        ],
+    },
 ];
 
-// 2. FALLBACKS DINÁMICOS: Guían al usuario sobre qué preguntar
 const respuestas_defecto = [
-  "Hmm, no he entendido del todo. ¿Podrías preguntarme sobre el contenido de las unidades o cómo navegar por la app?",
-  "Mi especialidad es ayudarte a usar este curso de IA. ¿Tienes alguna duda sobre los requisitos o cómo empezar?",
-  "No tengo la respuesta exacta a eso. Intenta preguntarme sobre los temas del curso o consejos para estudiar.",
+    "No estoy segura de entenderte. Prueba preguntando: '¿Cómo empiezo?' o '¿Qué aprenderé?'",
+    "Todavía estoy aprendiendo. Intenta con palabras clave como 'unidades' o 'consejos'.",
 ];
 
-// FUNCIÓN AUXILIAR: Elimina tildes y pasa a minúsculas
 const normalizarTexto = (texto) => {
-  return texto
-    .toLowerCase()
-    .normalize("NFD") // Separa las letras de sus acentos
-    .replace(/[\u0300-\u036f]/g, ""); // Elimina los acentos
+    return texto
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
 };
 
-const ChatBot_Ayuda = () => {
-  const [messages, setMessages] = useState([
-    {
-      from: "bot",
-      text: "¡Hola! Soy tu guía del curso. Pregúntame sobre cómo usar la app, las unidades o qué necesitas saber para empezar.",
-    },
-  ]);
-  const [input, setInput] = useState("");
-  const scrollViewRef = useRef();
+const TricolorStripe = () => (
+    <View style={{ flexDirection: "row", height: 4 }}>
+        <View style={{ flex: 1, backgroundColor: COLORS.puertoTejadaRed }} />
+        <View style={{ flex: 1, backgroundColor: COLORS.puertoTejadaWhite }} />
+        <View style={{ flex: 1, backgroundColor: COLORS.puertoTejadaGreen }} />
+    </View>
+);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
-    const userMessage = { from: "user", text: input };
-    const response = conseguirRespuesta(input);
-
-    setMessages((prev) => [
-      ...prev,
-      userMessage,
-      { from: "bot", text: response },
+const ChatBot_Ayuda = ({ navigation }) => {
+    const [messages, setMessages] = useState([
+        {
+            from: "bot",
+            text: "¡Hola! Soy Fidelina, tu asistente de la I.E. Fidelina Echeverry. ¿En qué puedo ayudarte hoy?",
+        },
     ]);
-    setInput("");
+    const [input, setInput] = useState("");
+    const [isTyping, setIsTyping] = useState(false);
+    const scrollViewRef = useRef();
 
-    setTimeout(() => {
-      scrollViewRef.current?.scrollToEnd({ animated: true });
-    }, 100);
-  };
+    const handleSend = (textOverride) => {
+        const messageToSend = textOverride || input;
+        if (!messageToSend.trim()) return;
 
+        setMessages((prev) => [...prev, { from: "user", text: messageToSend }]);
+        setInput("");
+        setIsTyping(true);
 
-  const conseguirRespuesta = (question) => {
-    const textoLimpio = normalizarTexto(question);
+        setTimeout(() => {
+            const response = conseguirRespuesta(messageToSend);
+            setMessages((prev) => [...prev, { from: "bot", text: response }]);
+            setIsTyping(false);
+        }, 1000);
+    };
 
-    for (let intencion of baseConocimiento) {
-      // Verificamos si alguna palabra clave está en el texto limpio
-      const hayCoincidencia = intencion.palabras.some((palabraK) =>
-        textoLimpio.includes(normalizarTexto(palabraK)),
-      );
+    const conseguirRespuesta = (question) => {
+        const textoLimpio = normalizarTexto(question);
+        for (let intencion of baseConocimiento) {
+            const hayCoincidencia = intencion.palabras.some((palabraK) =>
+                textoLimpio.includes(normalizarTexto(palabraK))
+            );
+            if (hayCoincidencia) {
+                const opciones = intencion.respuestas;
+                return opciones[Math.floor(Math.random() * opciones.length)];
+            }
+        }
+        return respuestas_defecto[Math.floor(Math.random() * respuestas_defecto.length)];
+    };
 
-      if (hayCoincidencia) {
-        // Seleccionamos una respuesta al azar dentro de esa categoría
-        const opciones = intencion.respuestas;
-        const indiceAleatorio = Math.floor(Math.random() * opciones.length);
-        return opciones[indiceAleatorio];
-      }
-    }
-
-    // Si no hay coincidencias, devolvemos un mensaje de error al azar
-    const indiceDefecto = Math.floor(Math.random() * respuestas_defecto.length);
-    return respuestas_defecto[indiceDefecto];
-  };
-
-  return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#f4f6fb" }}
-      edges={["bottom", "left", "right"]}
-    >
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 25}
-      >
-        <ScrollView
-          style={styles.history}
-          contentContainerStyle={{ paddingVertical: 16 }}
-          ref={scrollViewRef}
-          onContentSizeChange={() =>
-            scrollViewRef.current?.scrollToEnd({ animated: true })
-          }
-          keyboardShouldPersistTaps="handled"
-        >
-          {messages.map((msg, idx) => (
-            <View
-              key={idx}
-              style={[
-                styles.bubble,
-                msg.from === "user" ? styles.userBubble : styles.botBubble,
-              ]}
+    return (
+        <SafeAreaView style={styles.container}>
+            <LinearGradient 
+                colors={[COLORS.puertoTejadaRed, COLORS.puertoTejadaRedDark]} 
+                style={styles.header}
             >
-              <Text
-                style={msg.from === "user" ? styles.userText : styles.botText}
-              >
-                {msg.text}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
-        <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.input}
-            value={input}
-            onChangeText={setInput}
-            placeholder="Escribe tu pregunta..."
-            placeholderTextColor="#888"
-            accessibilityLabel="Campo de pregunta para el chatbot"
-          />
-          <TouchableOpacity
-            style={styles.sendButton}
-            onPress={handleSend}
-            accessibilityLabel="Enviar pregunta al chatbot"
-          >
-            <Ionicons name="send" size={22} color="#fff" />
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <MaterialIcons name="arrow-back" size={24} color="#fff" />
+                </TouchableOpacity>
+                <View style={styles.headerTitleWrap}>
+                    <Text style={styles.headerTitle}>Asistente Fidelina</Text>
+                    <Text style={styles.headerSubtitle}>Apoyo Institucional</Text>
+                </View>
+                <MaterialIcons name="support_agent" size={26} color="rgba(255,255,255,0.4)" />
+            </LinearGradient>
+
+            <TricolorStripe />
+
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 25}
+            >
+                <ScrollView
+                    style={styles.history}
+                    contentContainerStyle={{ paddingVertical: 16 }}
+                    ref={scrollViewRef}
+                    onContentSizeChange={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+                >
+                    {messages.map((msg, idx) => (
+                        <View
+                            key={idx}
+                            style={[
+                                styles.bubble,
+                                msg.from === "user" ? styles.userBubble : styles.botBubble
+                            ]}
+                        >
+                            <Text style={msg.from === "user" ? styles.userText : styles.botText}>
+                                {msg.text}
+                            </Text>
+                        </View>
+                    ))}
+                    {isTyping && (
+                        <View style={styles.typingBubble}>
+                            <Text style={styles.typingText}>Fidelina está escribiendo...</Text>
+                        </View>
+                    )}
+                </ScrollView>
+
+                {/* 2. SUGERENCIAS RÁPIDAS (Sincronizadas con la lógica) */}
+                <View style={styles.suggestionBox}>
+                    <Text style={styles.suggestionTitle}>Prueba preguntando:</Text>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.suggestionScroll}>
+                        {[
+                            { label: "¿Cómo empiezo?", val: "empezar" },
+                            { label: "¿Qué aprenderé?", val: "unidades" },
+                            { label: "Consejos", val: "consejos" },
+                            { label: "Requisitos", val: "requisitos" }
+                        ].map((item, i) => (
+                            <TouchableOpacity key={i} style={styles.tag} onPress={() => handleSend(item.val)}>
+                                <Text style={styles.tagText}>{item.label}</Text>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                </View>
+
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        style={styles.input}
+                        value={input}
+                        onChangeText={setInput}
+                        placeholder="Escribe tu duda aquí..."
+                        placeholderTextColor={COLORS.textLight}
+                    />
+                    <TouchableOpacity onPress={() => handleSend()}>
+                        <LinearGradient 
+                            colors={[COLORS.puertoTejadaRed, COLORS.puertoTejadaRedDark]} 
+                            style={styles.sendButton}
+                        >
+                            <MaterialIcons name="send" size={20} color="#fff" />
+                        </LinearGradient>
+                    </TouchableOpacity>
+                </View>
+            </KeyboardAvoidingView>
+        </SafeAreaView>
+    );
 };
 
 const styles = StyleSheet.create({
-  // ... Tus estilos originales (se mantienen exactamente igual)
-  container: { flex: 1, backgroundColor: "#f4f6fb" },
-  history: { flex: 1, paddingHorizontal: 16 },
-  bubble: { maxWidth: "80%", marginVertical: 6, padding: 12, borderRadius: 16 },
-  userBubble: {
-    backgroundColor: "#4f8cff",
-    alignSelf: "flex-end",
-    borderTopRightRadius: 4,
-  },
-  botBubble: {
-    backgroundColor: "#e0e0e0",
-    alignSelf: "flex-start",
-    borderTopLeftRadius: 4,
-  },
-  userText: { color: "#fff", fontSize: 16 },
-  botText: { color: "#222", fontSize: 16 },
-  inputContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 10,
-    backgroundColor: "#fff",
-    borderTopWidth: 1,
-    borderColor: "#e0e0e0",
-  },
-  input: {
-    flex: 1,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: "#f0f0f0",
-    paddingHorizontal: 16,
-    fontSize: 16,
-    color: "#222",
-  },
-  sendButton: {
-    marginLeft: 8,
-    backgroundColor: "#4f8cff",
-    borderRadius: 22,
-    padding: 10,
-    justifyContent: "center",
-    alignItems: "center",
-  },
+    container: {
+        flex: 1,
+        backgroundColor: COLORS.background,
+    },
+    header: {
+        padding: SPACING.md,
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    headerTitleWrap: {
+        flex: 1,
+        marginLeft: 15,
+    },
+    headerTitle: {
+        color: "#fff",
+        fontSize: 18,
+        fontWeight: "800",
+    },
+    headerSubtitle: {
+        color: "rgba(255,255,255,0.7)",
+        fontSize: 12,
+    },
+    history: {
+        flex: 1,
+        paddingHorizontal: 16,
+    },
+    bubble: {
+        maxWidth: "85%",
+        marginVertical: 6,
+        padding: 14,
+        borderRadius: RADIUS.lg,
+        ...SHADOWS.card,
+    },
+    userBubble: {
+        backgroundColor: COLORS.puertoTejadaRed,
+        alignSelf: "flex-end",
+        borderBottomRightRadius: 4,
+    },
+    botBubble: {
+        backgroundColor: COLORS.surface,
+        alignSelf: "flex-start",
+        borderBottomLeftRadius: 4,
+        borderWidth: 1,
+        borderColor: COLORS.border,
+    },
+    userText: {
+        color: "#fff",
+        fontSize: 15,
+    },
+    botText: {
+        color: COLORS.text,
+        fontSize: 15,
+    },
+    typingBubble: {
+        alignSelf: "flex-start",
+        padding: 10,
+    },
+    typingText: {
+        fontSize: 12,
+        color: COLORS.textLight,
+        fontStyle: "italic",
+    },
+    suggestionBox: {
+        paddingVertical: 12,
+        backgroundColor: COLORS.surface,
+        borderTopWidth: 1,
+        borderTopColor: COLORS.border,
+    },
+    suggestionTitle: {
+        fontSize: 11,
+        fontWeight: "700",
+        color: COLORS.textLight,
+        marginLeft: 16,
+        marginBottom: 8,
+        textTransform: "uppercase",
+    },
+    suggestionScroll: {
+        paddingHorizontal: 16,
+        gap: 10,
+    },
+    tag: {
+        paddingHorizontal: 16,
+        paddingVertical: 9,
+        backgroundColor: COLORS.surfaceAlt,
+        borderRadius: RADIUS.pill,
+        borderWidth: 1,
+        borderColor: COLORS.border,
+    },
+    tagText: {
+        fontSize: 13,
+        color: COLORS.puertoTejadaRed,
+        fontWeight: "700",
+    },
+    inputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        padding: 12,
+        backgroundColor: COLORS.surface,
+        borderTopWidth: 1,
+        borderColor: COLORS.border,
+    },
+    input: {
+        flex: 1,
+        height: 48,
+        borderRadius: RADIUS.pill,
+        backgroundColor: COLORS.surfaceAlt,
+        paddingHorizontal: 18,
+        fontSize: 15,
+        color: COLORS.text,
+    },
+    sendButton: {
+        marginLeft: 10,
+        width: 48,
+        height: 48,
+        borderRadius: 24,
+        justifyContent: "center",
+        alignItems: "center",
+    },
 });
 
 export default ChatBot_Ayuda;
