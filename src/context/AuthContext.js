@@ -1,82 +1,88 @@
 // context/AuthContext.js
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import { loadAuthState, saveAuthState, clearAuthState } from '../utils/storage';
+import React, { createContext, useState, useContext, useEffect } from "react";
+import {
+  loadAuthState,
+  saveAuthState,
+  clearAuthState,
+} from "../utils/authStorage";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const loadStoredAuth = async () => {
-            try {
-                const storedUser = await loadAuthState();
-                if (storedUser) {
-                    setUser(storedUser);
-                }
-            } catch (error) {
-                console.log('Error loading auth state:', error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-        loadStoredAuth();
-    }, []);
-
-    const login = async (email, password) => {
-        // Simulación de validación institucional
-        if (!email || !password) {
-            throw new Error('Todos los campos son obligatorios');
+  useEffect(() => {
+    const loadStoredAuth = async () => {
+      try {
+        const storedUser = await loadAuthState();
+        if (storedUser) {
+          setUser(storedUser);
         }
+      } catch (error) {
+        console.log("Error loading auth state:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadStoredAuth();
+  }, []);
 
-        // Validar que termine en @fidelina.edu.co (sin restringir parte local)
-        const emailLower = email.trim().toLowerCase();
-        if (!emailLower.endsWith('@fidelina.edu.co')) {
-            throw new Error('Debes usar tu correo institucional (@fidelina.edu.co)');
-        }
+  const login = async (email, password) => {
+    // Simulación de validación institucional
+    if (!email || !password) {
+      throw new Error("Todos los campos son obligatorios");
+    }
 
-        // Verificar que haya algo antes del @
-        const localPart = emailLower.split('@')[0];
-        if (localPart.length === 0) {
-            throw new Error('Ingresa un nombre de usuario válido antes del @');
-        }
+    // Validar que termine en @fidelina.edu.co (sin restringir parte local)
+    const emailLower = email.trim().toLowerCase();
+    if (!emailLower.endsWith("@fidelina.edu.co")) {
+      throw new Error("Debes usar tu correo institucional (@fidelina.edu.co)");
+    }
 
-        if (password.length < 4) {
-            throw new Error('La contraseña debe tener al menos 4 caracteres');
-        }
+    // Verificar que haya algo antes del @
+    const localPart = emailLower.split("@")[0];
+    if (localPart.length === 0) {
+      throw new Error("Ingresa un nombre de usuario válido antes del @");
+    }
 
-        // Simulación de credenciales correctas
-        const userData = {
-            email: emailLower,
-            name: localPart.replace(/\./g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-            role: 'Estudiante',
-            institution: 'I.E. Fidelina Echeverry',
-            location: 'Puerto Tejada, Cauca',
-            loginTime: new Date().toISOString(),
-        };
+    if (password.length < 4) {
+      throw new Error("La contraseña debe tener al menos 4 caracteres");
+    }
 
-        await saveAuthState(userData);
-        setUser(userData);
-        return userData;
+    // Simulación de credenciales correctas
+    const userData = {
+      email: emailLower,
+      name: localPart
+        .replace(/\./g, " ")
+        .replace(/\b\w/g, (l) => l.toUpperCase()),
+      role: "Estudiante",
+      institution: "I.E. Fidelina Echeverry",
+      location: "Puerto Tejada, Cauca",
+      loginTime: new Date().toISOString(),
     };
 
-    const logout = async () => {
-        await clearAuthState();
-        setUser(null);
-    };
+    await saveAuthState(userData);
+    setUser(userData);
+    return userData;
+  };
 
-    return (
-        <AuthContext.Provider value={{ user, isLoading, login, logout }}>
-            {children}
-        </AuthContext.Provider>
-    );
+  const logout = async () => {
+    await clearAuthState();
+    setUser(null);
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, isLoading, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error('useAuth debe usarse dentro de un AuthProvider');
-    }
-    return context;
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth debe usarse dentro de un AuthProvider");
+  }
+  return context;
 };

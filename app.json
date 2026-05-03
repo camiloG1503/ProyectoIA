@@ -22,7 +22,8 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "package": "com.puertotejada.proyectia"
+      "package": "com.puertotejada.proyectia",
+      "softwareKeyboardLayoutMode": "resize"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -40,6 +41,7 @@
       "eas": {
         "projectId": "your-project-id"
       }
-    }
+    },
+    "plugins": ["expo-sharing"]
   }
 }

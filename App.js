@@ -1,13 +1,30 @@
 // App.js
 import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
-import { Platform } from "react-native";
+import { LogBox, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { AuthProvider } from "./src/context/AuthContext";
 import AppNavigator from "./src/navigation/AppNavigator";
 
 export default function App() {
   useEffect(() => {
+    // Filtrar warning de InteractionManager que proviene de dependencias
+    const originalWarn = console.warn;
+    console.warn = (...args) => {
+      if (
+        typeof args[0] === "string" &&
+        args[0].includes("InteractionManager has been deprecated")
+      ) {
+        return;
+      }
+
+      originalWarn(...args);
+    };
+
+    LogBox.ignoreLogs([
+      "InteractionManager has been deprecated and will be removed in a future release.",
+    ]);
+
     // Inyectar estilos globales para scroll en web - SOLO EN WEB
     if (Platform.OS === "web") {
       try {
