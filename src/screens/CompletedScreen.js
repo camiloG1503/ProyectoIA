@@ -5,7 +5,6 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
@@ -13,6 +12,7 @@ import {
   Animated,
   Platform,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { COLORS, PUERTO_TEJADA, RADIUS, SPACING } from "../utils/colors";
 import { ROUTE_NAMES } from "../navigation/routeNames";

@@ -13,12 +13,18 @@ import { ROUTE_NAMES } from "./routeNames";
 
 import HomeScreen from "../screens/HomeScreen";
 import DetailsScreen from "../screens/DetailsScreen";
-import LessonContentScreen from "../screens/RequirementFlowScreen";
+import ModuleOverviewScreen from "../screens/ModuleOverviewScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import CompletedScreen from "../screens/CompletedScreen";
 import ChatBot_Ayuda from "../screens/ChatBot_Ayuda";
 import PWAScreen from "../screens/PWAScreen";
 import LoginScreen from "../screens/LoginScreen";
+import ManualPdfScreen from "../screens/ManualPdfScreen";
+import DiagnosticScreen from "../screens/DiagnosticScreen";
+import MicroLessonsScreen from "../screens/MicroLessonsScreen";
+import PromptPracticeScreen from "../screens/PromptPracticeScreen";
+import ModulePdfScreen from "../screens/ModulePdfScreen";
+import FinalCertificateScreen from "../screens/FinalCertificateScreen";
 
 import { COLORS } from "../utils/colors";
 
@@ -59,8 +65,38 @@ const AppStack = () => {
       />
       <Stack.Screen
         name={ROUTE_NAMES.LESSON_CONTENT}
-        component={LessonContentScreen}
-        options={{ title: "Contenido de la Lección" }}
+        component={ModuleOverviewScreen}
+        options={{ title: "Contenido del modulo" }}
+      />
+      <Stack.Screen
+        name={ROUTE_NAMES.MANUAL_PDF}
+        component={ManualPdfScreen}
+        options={{ title: "Manual del curso" }}
+      />
+      <Stack.Screen
+        name={ROUTE_NAMES.DIAGNOSTIC}
+        component={DiagnosticScreen}
+        options={{ title: "Diagnostico inicial" }}
+      />
+      <Stack.Screen
+        name={ROUTE_NAMES.MICRO_LESSONS}
+        component={MicroLessonsScreen}
+        options={{ title: "Microlecciones" }}
+      />
+      <Stack.Screen
+        name={ROUTE_NAMES.PROMPT_PRACTICE}
+        component={PromptPracticeScreen}
+        options={{ title: "Práctica de Prompts" }}
+      />
+      <Stack.Screen
+        name={ROUTE_NAMES.MODULE_PDF}
+        component={ModulePdfScreen}
+        options={{ title: "PDF del Módulo" }}
+      />
+      <Stack.Screen
+        name={ROUTE_NAMES.FINAL_CERTIFICATE}
+        component={FinalCertificateScreen}
+        options={{ title: "Certificado Final" }}
       />
       <Stack.Screen
         name={ROUTE_NAMES.COMPLETED}

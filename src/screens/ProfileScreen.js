@@ -6,7 +6,6 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   RefreshControl,
@@ -14,6 +13,7 @@ import {
   Alert,
   Animated,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import { loadProgress, resetProgress } from "../utils/storage";
 import { lessonsData } from "../utils/lessonsData";

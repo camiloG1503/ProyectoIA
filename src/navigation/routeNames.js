@@ -10,4 +10,11 @@ export const ROUTE_NAMES = {
   CHATBOT_AYUDA: "ChatBot_Ayuda",
   PWA: "PWA",
   LOGIN: "Login",
+  MANUAL_PDF: "ManualPdf",
+  DIAGNOSTIC: "Diagnostic",
+  MODULE_OVERVIEW: "ModuleOverview",
+  MICRO_LESSONS: "MicroLessons",
+  PROMPT_PRACTICE: "PromptPractice",
+  MODULE_PDF: "ModulePdf",
+  FINAL_CERTIFICATE: "FinalCertificate",
 };

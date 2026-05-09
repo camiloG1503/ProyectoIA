@@ -5,11 +5,11 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  SafeAreaView,
   TouchableOpacity,
   RefreshControl,
   Platform,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { loadProgress } from "../utils/storage";
 import { lessonsData } from "../utils/lessonsData";
 import { COLORS, RADIUS, SPACING, SHADOWS } from "../utils/colors";

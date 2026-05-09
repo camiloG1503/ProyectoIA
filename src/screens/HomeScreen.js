@@ -6,13 +6,14 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
-  ScrollView,
+  FlatList,
   RefreshControl,
   Platform,
   TouchableOpacity,
   Animated,
+  useWindowDimensions,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
 import LessonCard from "../components/LessonCard";
 import TricolorStripe from "../components/TricolorStripe";
@@ -26,6 +27,7 @@ import { ROUTE_NAMES } from "../navigation/routeNames";
 const HomeScreen = ({ navigation }) => {
   const [completedLessons, setCompletedLessons] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const { width } = useWindowDimensions();
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const slideAnim = React.useRef(new Animated.Value(20)).current;
 
@@ -63,11 +65,15 @@ const HomeScreen = ({ navigation }) => {
   const pending = totalLessons - completed;
   const percentage =
     totalLessons > 0 ? Math.round((completed / totalLessons) * 100) : 0;
+  const isTablet = width > 768;
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
+      <FlatList
+        data={lessonsData}
+        keyExtractor={(item) => String(item.id)}
+        numColumns={isTablet ? 2 : 1}
+        columnWrapperStyle={isTablet ? styles.lessonRow : undefined}
         refreshControl={
           Platform.OS === "web" ? undefined : (
             <RefreshControl
@@ -79,253 +85,323 @@ const HomeScreen = ({ navigation }) => {
           )
         }
         contentContainerStyle={styles.scrollContent}
-      >
-        {/* ═══════════════════════════════════════════════════════════
-                    HERO — Cabecera institucional principal
-                ═══════════════════════════════════════════════════════════ */}
-        <View style={styles.hero}>
-          {/* Patrón de puntos decorativo */}
-          <View style={styles.heroPattern} pointerEvents="none">
-            {[...Array(6)].map((_, row) => (
-              <View key={row} style={styles.patternRow}>
-                {[...Array(8)].map((_, col) => (
-                  <View key={col} style={styles.patternDot} />
+        ListHeaderComponent={
+          <>
+            {/* ═══════════════════════════════════════════════════════════
+                        HERO — Cabecera institucional principal
+                    ═══════════════════════════════════════════════════════════ */}
+            <View style={styles.hero}>
+              {/* Patrón de puntos decorativo */}
+              <View style={styles.heroPattern} pointerEvents="none">
+                {[...Array(6)].map((_, row) => (
+                  <View key={row} style={styles.patternRow}>
+                    {[...Array(8)].map((_, col) => (
+                      <View key={col} style={styles.patternDot} />
+                    ))}
+                  </View>
                 ))}
               </View>
-            ))}
-          </View>
 
-          {/* Contenido del hero */}
-          <Animated.View
-            style={[
-              styles.heroContent,
-              { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
-            ]}
-          >
-            {/* Badge institucional */}
-            <View style={styles.institutionBadge}>
-              <MaterialIcons
-                name="school"
-                size={14}
-                color={COLORS.puertoTejadaRed}
-              />
-              <Text style={styles.institutionBadgeText}>
-                I.E. Fidelina Echeverry · Puerto Tejada
-              </Text>
+              {/* Contenido del hero */}
+              <Animated.View
+                style={[
+                  styles.heroContent,
+                  { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
+                ]}
+              >
+                {/* Badge institucional */}
+                <View style={styles.institutionBadge}>
+                  <MaterialIcons
+                    name="school"
+                    size={14}
+                    color={COLORS.puertoTejadaRed}
+                  />
+                  <Text style={styles.institutionBadgeText}>
+                    I.E. Fidelina Echeverry · Puerto Tejada
+                  </Text>
+                </View>
+
+                {/* Ícono central */}
+                <View style={styles.heroIconContainer}>
+                  <View style={styles.heroIconOuter}>
+                    <View style={styles.heroIconInner}>
+                      <Text style={styles.heroEmoji}>🛰️</Text>
+                    </View>
+                  </View>
+                </View>
+
+                <Text style={styles.heroTitle}>
+                  Aprende{"\n"}Inteligencia Artificial
+                </Text>
+                <Text style={styles.heroSubtitle}>
+                  Paso a paso, domina las herramientas del futuro
+                </Text>
+
+                {/* Estadísticas del hero */}
+                <View style={styles.heroStats}>
+                  <HeroStat
+                    icon="check-circle"
+                    value={completed}
+                    label={completed === 1 ? "Completada" : "Completadas"}
+                  />
+                  <View style={styles.heroStatDivider} />
+                  <HeroStat
+                    icon="menu-book"
+                    value={totalLessons}
+                    label="Lecciones"
+                  />
+                  <View style={styles.heroStatDivider} />
+                  <HeroStat
+                    icon="trending-up"
+                    value={`${percentage}%`}
+                    label="Progreso"
+                  />
+                </View>
+              </Animated.View>
+
+              {/* Franja tricolor en la parte inferior del hero */}
+              <TricolorStripe height={5} />
             </View>
 
-            {/* Ícono central */}
-            <View style={styles.heroIconContainer}>
-              <View style={styles.heroIconOuter}>
-                <View style={styles.heroIconInner}>
-                  <Text style={styles.heroEmoji}>🛰️</Text>
+            <Animated.View
+              style={[
+                styles.bodyContent,
+                { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
+              ]}
+            >
+              {/* ═══════════════════════════════════════════════════════
+                            TARJETA DE PROGRESO
+                        ═══════════════════════════════════════════════════════ */}
+              <View style={styles.progressCard}>
+                {/* Encabezado de la tarjeta */}
+                <View style={styles.progressCardHeader}>
+                  <View style={styles.progressCardTitleRow}>
+                    <View
+                      style={[
+                        styles.progressDot,
+                        { backgroundColor: COLORS.puertoTejadaRed },
+                      ]}
+                    />
+                    <Text style={styles.progressCardTitle}>
+                      Progreso del curso
+                    </Text>
+                  </View>
+                  <Text style={styles.progressCardPct}>{percentage}%</Text>
+                </View>
+
+                {/* Barra de progreso */}
+                <View style={styles.progressBarBg}>
+                  <View
+                    style={[
+                      styles.progressBarFill,
+                      { width: `${percentage}%` },
+                    ]}
+                  />
+                  {percentage > 0 && (
+                    <View
+                      style={[
+                        styles.progressBarGlow,
+                        { width: `${percentage}%` },
+                      ]}
+                    />
+                  )}
+                </View>
+
+                {/* Chips de estado */}
+                <View style={styles.progressChips}>
+                  <View style={[styles.chip, styles.chipCompleted]}>
+                    <MaterialIcons
+                      name="check-circle"
+                      size={12}
+                      color={COLORS.puertoTejadaGreen}
+                    />
+                    <Text
+                      style={[
+                        styles.chipText,
+                        { color: COLORS.puertoTejadaGreen },
+                      ]}
+                    >
+                      {completed} completadas
+                    </Text>
+                  </View>
+                  {pending > 0 && (
+                    <View style={[styles.chip, styles.chipPending]}>
+                      <MaterialIcons
+                        name="radio-button-unchecked"
+                        size={12}
+                        color={COLORS.textLight}
+                      />
+                      <Text
+                        style={[styles.chipText, { color: COLORS.textLight }]}
+                      >
+                        {pending} pendientes
+                      </Text>
+                    </View>
+                  )}
+                  {percentage === 100 && (
+                    <View style={[styles.chip, styles.chipFinished]}>
+                      <MaterialIcons name="verified" size={12} color="#fff" />
+                      <Text style={[styles.chipText, { color: "#fff" }]}>
+                        ¡Módulo completo!
+                      </Text>
+                    </View>
+                  )}
                 </View>
               </View>
-            </View>
 
-            <Text style={styles.heroTitle}>
-              Aprende{"\n"}Inteligencia Artificial
-            </Text>
-            <Text style={styles.heroSubtitle}>
-              Paso a paso, domina las herramientas del futuro
-            </Text>
+              {/* ═══════════════════════════════════════════════════════
+                            BANNER PUERTO TEJADA
+                        ═══════════════════════════════════════════════════════ */}
+              <View style={styles.municipioCard}>
+                <TricolorStripe height={5} />
+                <View style={styles.municipioBody}>
+                  <View style={styles.municipioLeft}>
+                    <Text style={styles.municipioEmoji}>🌿</Text>
+                  </View>
+                  <View style={styles.municipioRight}>
+                    <Text style={styles.municipioName}>
+                      {PUERTO_TEJADA.nombre}, {PUERTO_TEJADA.departamento}
+                    </Text>
+                    <Text style={styles.municipioInstitution}>
+                      {PUERTO_TEJADA.institucion}
+                    </Text>
+                    <Text style={styles.municipioFundacion}>
+                      Fundado: {PUERTO_TEJADA.fundacion}
+                    </Text>
+                    <Text style={styles.municipioLema} numberOfLines={2}>
+                      {PUERTO_TEJADA.lema}
+                    </Text>
+                  </View>
+                </View>
+              </View>
 
-            {/* Estadísticas del hero */}
-            <View style={styles.heroStats}>
-              <HeroStat
-                icon="check-circle"
-                value={completed}
-                label={completed === 1 ? "Completada" : "Completadas"}
-              />
-              <View style={styles.heroStatDivider} />
-              <HeroStat
-                icon="menu-book"
-                value={totalLessons}
-                label="Lecciones"
-              />
-              <View style={styles.heroStatDivider} />
-              <HeroStat
-                icon="trending-up"
-                value={`${percentage}%`}
-                label="Progreso"
-              />
-            </View>
-          </Animated.View>
-
-          {/* Franja tricolor en la parte inferior del hero */}
-          <TricolorStripe height={5} />
-        </View>
-
-        <Animated.View
-          style={[
-            styles.bodyContent,
-            { opacity: fadeAnim, transform: [{ translateY: slideAnim }] },
-          ]}
-        >
-          {/* ═══════════════════════════════════════════════════════
-                        TARJETA DE PROGRESO
-                    ═══════════════════════════════════════════════════════ */}
-          <View style={styles.progressCard}>
-            {/* Encabezado de la tarjeta */}
-            <View style={styles.progressCardHeader}>
-              <View style={styles.progressCardTitleRow}>
+              {/* ═══════════════════════════════════════════════════════
+                            ACCESOS PRINCIPALES
+                        ═══════════════════════════════════════════════════════ */}
+              <View style={styles.hierarchyCard}>
                 <View
                   style={[
-                    styles.progressDot,
-                    { backgroundColor: COLORS.puertoTejadaRed },
+                    styles.hierarchyGrid,
+                    { flexDirection: isTablet ? "row" : "column" },
                   ]}
-                />
-                <Text style={styles.progressCardTitle}>Progreso del curso</Text>
-              </View>
-              <Text style={styles.progressCardPct}>{percentage}%</Text>
-            </View>
-
-            {/* Barra de progreso */}
-            <View style={styles.progressBarBg}>
-              <View
-                style={[styles.progressBarFill, { width: `${percentage}%` }]}
-              />
-              {percentage > 0 && (
-                <View
-                  style={[styles.progressBarGlow, { width: `${percentage}%` }]}
-                />
-              )}
-            </View>
-
-            {/* Chips de estado */}
-            <View style={styles.progressChips}>
-              <View style={[styles.chip, styles.chipCompleted]}>
-                <MaterialIcons
-                  name="check-circle"
-                  size={12}
-                  color={COLORS.puertoTejadaGreen}
-                />
-                <Text
-                  style={[styles.chipText, { color: COLORS.puertoTejadaGreen }]}
                 >
-                  {completed} completadas
-                </Text>
+                  <TouchableOpacity
+                    style={[
+                      styles.hierarchyButton,
+                      { width: isTablet ? "48%" : "100%" },
+                    ]}
+                    onPress={() => navigation.navigate(ROUTE_NAMES.MANUAL_PDF)}
+                  >
+                    <MaterialIcons name="menu-book" size={18} color="#fff" />
+                    <Text style={styles.hierarchyButtonText}>
+                      Manual del curso
+                    </Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.hierarchyButton,
+                      { width: isTablet ? "48%" : "100%" },
+                    ]}
+                    onPress={() => navigation.navigate(ROUTE_NAMES.DIAGNOSTIC)}
+                  >
+                    <MaterialIcons
+                      name="assignment-turned-in"
+                      size={18}
+                      color="#fff"
+                    />
+                    <Text style={styles.hierarchyButtonText}>
+                      Diagnostico inicial
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              {pending > 0 && (
-                <View style={[styles.chip, styles.chipPending]}>
-                  <MaterialIcons
-                    name="radio-button-unchecked"
-                    size={12}
-                    color={COLORS.textLight}
+
+              {/* ═══════════════════════════════════════════════════════
+                            MODULOS
+                        ═══════════════════════════════════════════════════════ */}
+              <View style={styles.sectionHeader}>
+                <View style={styles.sectionTitleRow}>
+                  <View
+                    style={[
+                      styles.sectionAccent,
+                      { backgroundColor: COLORS.puertoTejadaRed },
+                    ]}
                   />
-                  <Text style={[styles.chipText, { color: COLORS.textLight }]}>
-                    {pending} pendientes
-                  </Text>
+                  <Text style={styles.sectionTitle}>Modulos 1 a 6</Text>
                 </View>
-              )}
-              {percentage === 100 && (
-                <View style={[styles.chip, styles.chipFinished]}>
-                  <MaterialIcons name="verified" size={12} color="#fff" />
-                  <Text style={[styles.chipText, { color: "#fff" }]}>
-                    ¡Módulo completo!
-                  </Text>
-                </View>
-              )}
-            </View>
-          </View>
-
-          {/* ═══════════════════════════════════════════════════════
-                        BANNER PUERTO TEJADA
-                    ═══════════════════════════════════════════════════════ */}
-          <View style={styles.municipioCard}>
-            <TricolorStripe height={5} />
-            <View style={styles.municipioBody}>
-              <View style={styles.municipioLeft}>
-                <Text style={styles.municipioEmoji}>🌿</Text>
+                <Text style={styles.sectionCount}>{totalLessons} modulos</Text>
               </View>
-              <View style={styles.municipioRight}>
-                <Text style={styles.municipioName}>
-                  {PUERTO_TEJADA.nombre}, {PUERTO_TEJADA.departamento}
-                </Text>
-                <Text style={styles.municipioInstitution}>
-                  {PUERTO_TEJADA.institucion}
-                </Text>
-                <Text style={styles.municipioFundacion}>
-                  Fundado: {PUERTO_TEJADA.fundacion}
-                </Text>
-                <Text style={styles.municipioLema} numberOfLines={2}>
-                  {PUERTO_TEJADA.lema}
-                </Text>
-              </View>
-            </View>
-          </View>
-
-          {/* ═══════════════════════════════════════════════════════
-                        ACCESO RÁPIDO — PWA
-                    ═══════════════════════════════════════════════════════ */}
-          <TouchableOpacity
-            style={styles.pwaCard}
-            onPress={() => navigation.navigate(ROUTE_NAMES.PWA)}
-            activeOpacity={0.8}
-          >
-            <View style={styles.pwaIconContainer}>
-              <MaterialIcons name="important-devices" size={22} color="#fff" />
-            </View>
-            <View style={styles.pwaTextContainer}>
-              <Text style={styles.pwaTitle}>Nuestra PWA</Text>
-              <Text style={styles.pwaSubtitle}>
-                Instala la app en tu dispositivo
-              </Text>
-            </View>
-            <MaterialIcons
-              name="chevron-right"
-              size={22}
-              color={COLORS.puertoTejadaRed}
+            </Animated.View>
+          </>
+        }
+        renderItem={({ item }) => (
+          <View style={styles.lessonItem}>
+            <LessonCard
+              lesson={item}
+              isCompleted={completedLessons.includes(item.id)}
+              onPress={() =>
+                navigation.navigate(ROUTE_NAMES.LESSON_CONTENT, {
+                  lesson: item,
+                  previousScreen: "Home",
+                })
+              }
             />
-          </TouchableOpacity>
-
-          {/* ═══════════════════════════════════════════════════════
-                        LECCIONES
-                    ═══════════════════════════════════════════════════════ */}
-          <View style={styles.sectionHeader}>
-            <View style={styles.sectionTitleRow}>
-              <View
-                style={[
-                  styles.sectionAccent,
-                  { backgroundColor: COLORS.puertoTejadaRed },
-                ]}
-              />
-              <Text style={styles.sectionTitle}>Lecciones del módulo</Text>
-            </View>
-            <Text style={styles.sectionCount}>{totalLessons} lecciones</Text>
           </View>
-
-          <View style={styles.lessonsContainer}>
-            {lessonsData.map((lesson) => (
-              <LessonCard
-                key={lesson.id}
-                lesson={lesson}
-                isCompleted={completedLessons.includes(lesson.id)}
+        )}
+        ListFooterComponent={
+          <View>
+            <View style={styles.hierarchyCard}>
+              <TouchableOpacity
+                style={styles.certificateButton}
                 onPress={() =>
-                  navigation.navigate(ROUTE_NAMES.DETAILS, {
-                    lesson,
-                    previousScreen: "Home",
-                  })
+                  navigation.navigate(ROUTE_NAMES.FINAL_CERTIFICATE)
                 }
-              />
-            ))}
-          </View>
+              >
+                <MaterialIcons name="verified" size={18} color="#fff" />
+                <Text style={styles.hierarchyButtonText}>
+                  Descargar certificado final
+                </Text>
+              </TouchableOpacity>
+            </View>
 
-          {/* ═══════════════════════════════════════════════════════
-                        FOOTER
-                    ═══════════════════════════════════════════════════════ */}
-          <View style={styles.footer}>
-            <TricolorStripe height={3} />
-            <View style={styles.footerContent}>
-              <Text style={styles.footerTitle}>ProyectIA</Text>
-              <Text style={styles.footerSub}>🌿 {PUERTO_TEJADA.lema} 🌿</Text>
-              <Text style={styles.footerSmall}>
-                Aplicación desarrollada con orgullo porteño
-              </Text>
+            <TouchableOpacity
+              style={styles.pwaCard}
+              onPress={() => navigation.navigate(ROUTE_NAMES.PWA)}
+              activeOpacity={0.8}
+            >
+              <View style={styles.pwaIconContainer}>
+                <MaterialIcons
+                  name="important-devices"
+                  size={22}
+                  color="#fff"
+                />
+              </View>
+              <View style={styles.pwaTextContainer}>
+                <Text style={styles.pwaTitle}>Nuestra PWA</Text>
+                <Text style={styles.pwaSubtitle}>
+                  Instala la app en tu dispositivo
+                </Text>
+              </View>
+              <MaterialIcons
+                name="chevron-right"
+                size={22}
+                color={COLORS.puertoTejadaRed}
+              />
+            </TouchableOpacity>
+
+            <View style={styles.footer}>
+              <TricolorStripe height={3} />
+              <View style={styles.footerContent}>
+                <Text style={styles.footerTitle}>ProyectIA</Text>
+                <Text style={styles.footerSub}>🌿 {PUERTO_TEJADA.lema} 🌿</Text>
+                <Text style={styles.footerSmall}>
+                  Aplicación desarrollada con orgullo porteño
+                </Text>
+              </View>
             </View>
           </View>
-        </Animated.View>
-      </ScrollView>
+        }
+      />
 
       {/* ─── FAB — ChatBot ────────────────────────────────────────────── */}
       <TouchableOpacity
@@ -349,6 +425,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
+    paddingBottom: 120,
   },
 
   // ─── Hero ────────────────────────────────────────────────────────────────
@@ -485,6 +562,53 @@ const styles = StyleSheet.create({
   bodyContent: {
     padding: SPACING.md,
     paddingTop: SPACING.lg,
+  },
+  hierarchyCard: {
+    backgroundColor: COLORS.surface,
+    borderRadius: RADIUS.xl,
+    padding: SPACING.md,
+    marginBottom: SPACING.md,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  hierarchyGrid: {
+    gap: 10,
+    flexWrap: "wrap",
+    marginTop: SPACING.sm,
+  },
+  hierarchyButton: {
+    backgroundColor: COLORS.primary,
+    borderRadius: RADIUS.lg,
+    minHeight: 48,
+    paddingHorizontal: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 6,
+  },
+  certificateButton: {
+    backgroundColor: COLORS.primary,
+    borderRadius: RADIUS.lg,
+    minHeight: 48,
+    paddingHorizontal: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 6,
+    width: "100%",
+  },
+  hierarchyButtonText: {
+    color: "#fff",
+    fontWeight: "700",
+  },
+  lessonRow: {
+    justifyContent: "space-between",
+    gap: 14,
+    paddingHorizontal: SPACING.md,
+  },
+  lessonItem: {
+    flex: 1,
+    paddingHorizontal: SPACING.md,
   },
 
   // ─── Tarjeta de progreso ──────────────────────────────────────────────────
@@ -706,6 +830,11 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     color: COLORS.text,
     letterSpacing: -0.3,
+  },
+  bodyText: {
+    fontSize: 13,
+    color: COLORS.textLight,
+    lineHeight: 18,
   },
   sectionCount: {
     fontSize: 12,
