@@ -30,6 +30,8 @@ const HomeScreen = ({ navigation }) => {
   const { width } = useWindowDimensions();
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
   const slideAnim = React.useRef(new Animated.Value(20)).current;
+  const useNativeDriver = Platform.OS !== "web";
+  const [webColumns] = useState(() => (width > 768 ? 2 : 1));
 
   const loadUserProgress = async () => {
     const stored = await loadProgress();
@@ -43,13 +45,13 @@ const HomeScreen = ({ navigation }) => {
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 600,
-        useNativeDriver: true,
+        useNativeDriver,
       }),
       Animated.spring(slideAnim, {
         toValue: 0,
         friction: 8,
         tension: 60,
-        useNativeDriver: true,
+        useNativeDriver,
       }),
     ]).start();
   }, []);
@@ -65,14 +67,16 @@ const HomeScreen = ({ navigation }) => {
   const pending = totalLessons - completed;
   const percentage =
     totalLessons > 0 ? Math.round((completed / totalLessons) * 100) : 0;
-  const isTablet = width > 768;
+  const isTablet = Platform.OS === "web" ? webColumns > 1 : width > 768;
+  const numColumns = Platform.OS === "web" ? webColumns : isTablet ? 2 : 1;
 
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
         data={lessonsData}
         keyExtractor={(item) => String(item.id)}
-        numColumns={isTablet ? 2 : 1}
+        key={`lessons-${numColumns}`}
+        numColumns={numColumns}
         columnWrapperStyle={isTablet ? styles.lessonRow : undefined}
         refreshControl={
           Platform.OS === "web" ? undefined : (
@@ -92,7 +96,7 @@ const HomeScreen = ({ navigation }) => {
                     ═══════════════════════════════════════════════════════════ */}
             <View style={styles.hero}>
               {/* Patrón de puntos decorativo */}
-              <View style={styles.heroPattern} pointerEvents="none">
+              <View style={[styles.heroPattern, { pointerEvents: "none" }]}>
                 {[...Array(6)].map((_, row) => (
                   <View key={row} style={styles.patternRow}>
                     {[...Array(8)].map((_, col) => (

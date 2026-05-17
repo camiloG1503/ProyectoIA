@@ -30,6 +30,7 @@ const ProfileScreen = () => {
   const [completedLessons, setCompletedLessons] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const useNativeDriver = Platform.OS !== "web";
 
   const loadUserProgress = async () => {
     try {
@@ -45,7 +46,7 @@ const ProfileScreen = () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
       duration: 500,
-      useNativeDriver: true,
+      useNativeDriver,
     }).start();
   }, []);
 
@@ -114,7 +115,7 @@ const ProfileScreen = () => {
                 ═══════════════════════════════════════════════════════════ */}
         <View style={styles.hero}>
           {/* Patrón decorativo */}
-          <View style={styles.heroPattern} pointerEvents="none">
+          <View style={[styles.heroPattern, { pointerEvents: "none" }]}>
             {[...Array(5)].map((_, row) => (
               <View key={row} style={styles.patternRow}>
                 {[...Array(7)].map((_, col) => (

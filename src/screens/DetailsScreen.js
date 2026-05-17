@@ -28,18 +28,19 @@ const DetailsScreen = ({ route, navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const scaleAnim = React.useRef(new Animated.Value(0.97)).current;
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
+  const useNativeDriver = Platform.OS !== "web";
 
   React.useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
         duration: 500,
-        useNativeDriver: true,
+        useNativeDriver,
       }),
       Animated.spring(scaleAnim, {
         toValue: 1,
         friction: 8,
-        useNativeDriver: true,
+        useNativeDriver,
       }),
     ]).start();
   }, []);
@@ -101,7 +102,7 @@ const DetailsScreen = ({ route, navigation }) => {
                     ═══════════════════════════════════════════════════════ */}
           <View style={[styles.hero, { backgroundColor: lesson.color }]}>
             {/* Patrón decorativo */}
-            <View style={styles.heroPattern} pointerEvents="none">
+            <View style={[styles.heroPattern, { pointerEvents: "none" }]}>
               {[...Array(4)].map((_, row) => (
                 <View key={row} style={styles.patternRow}>
                   {[...Array(6)].map((_, col) => (

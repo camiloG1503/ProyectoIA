@@ -37,6 +37,7 @@ const confettiStyles = StyleSheet.create({
 const CompletedScreen = ({ route, navigation }) => {
   const { lesson } = route.params;
   const [refreshing, setRefreshing] = useState(false);
+  const useNativeDriver = Platform.OS !== "web";
 
   // Animaciones
   const scaleAnim = useRef(new Animated.Value(0)).current;
@@ -53,17 +54,17 @@ const CompletedScreen = ({ route, navigation }) => {
           toValue: 1,
           friction: 5,
           tension: 80,
-          useNativeDriver: true,
+          useNativeDriver,
         }),
         Animated.timing(fadeAnim, {
           toValue: 1,
           duration: 500,
-          useNativeDriver: true,
+          useNativeDriver,
         }),
         Animated.spring(slideAnim, {
           toValue: 0,
           friction: 7,
-          useNativeDriver: true,
+          useNativeDriver,
         }),
       ]),
     ]).start();
@@ -72,7 +73,7 @@ const CompletedScreen = ({ route, navigation }) => {
     Animated.timing(rotateAnim, {
       toValue: 1,
       duration: 700,
-      useNativeDriver: true,
+      useNativeDriver,
     }).start();
 
     // Pulso continuo del ícono central
@@ -81,12 +82,12 @@ const CompletedScreen = ({ route, navigation }) => {
         Animated.timing(pulseAnim, {
           toValue: 1.08,
           duration: 900,
-          useNativeDriver: true,
+          useNativeDriver,
         }),
         Animated.timing(pulseAnim, {
           toValue: 1,
           duration: 900,
-          useNativeDriver: true,
+          useNativeDriver,
         }),
       ]),
     );
@@ -132,7 +133,7 @@ const CompletedScreen = ({ route, navigation }) => {
           {/* ═══════════════════════════════════════════════════════
                         CONFETI DECORATIVO (estático)
                     ═══════════════════════════════════════════════════════ */}
-          <View style={styles.confettiContainer} pointerEvents="none">
+          <View style={[styles.confettiContainer, { pointerEvents: "none" }]}>
             <ConfettiDot
               color={COLORS.puertoTejadaRed}
               style={{ top: 20, left: "15%" }}

@@ -30,15 +30,20 @@ export default function App() {
       try {
         const style = document.createElement("style");
         style.textContent = `
-          html, body, #root {
+          html, body {
             height: 100%;
             width: 100%;
             margin: 0;
             padding: 0;
-            overflow-y: auto;
+            overflow-y: scroll;
             overflow-x: hidden;
-            -webkit-overflow-scrolling: touch;
+            scrollbar-gutter: stable;
             overscroll-behavior-y: none;
+          }
+
+          #root {
+            min-height: 100%;
+            width: 100%;
           }
         `;
         document.head.appendChild(style);
