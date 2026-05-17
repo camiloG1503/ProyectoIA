@@ -34,6 +34,7 @@ const AppStack = () => {
   const headerColor = Platform.select({
     ios: COLORS.puertoTejadaRed,
     android: COLORS.primary,
+    default: COLORS.primary,
   });
 
   return (
@@ -43,6 +44,8 @@ const AppStack = () => {
           backgroundColor: headerColor,
         },
         headerTintColor: "#fff",
+        headerTitleStyle: { color: "#fff" },
+        headerBackTitleVisible: false,
         headerRight: () => (
           <TouchableOpacity
             onPress={() => navigation.navigate(ROUTE_NAMES.PROFILE)}

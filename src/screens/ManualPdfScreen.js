@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
+  ScrollView,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -35,65 +36,75 @@ const ManualPdfScreen = () => {
 
   return (
     <SafeAreaView style={styles.container} edges={["bottom"]}>
-      <View
-        style={[styles.content, { flexDirection: isTablet ? "row" : "column" }]}
-      >
-        <View style={styles.hero}>
-          <MaterialIcons name="menu-book" size={40} color="#fff" />
-          <Text style={[styles.heroTitle, isTablet && styles.heroTitleLarge]}>
-            Manual del curso
-          </Text>
-          <Text style={styles.heroSubtitle}>
-            Guia con instrucciones de uso y lecturas resumidas.
-          </Text>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Descarga oficial</Text>
-          <Text style={styles.bodyText}>
-            Estas a punto de descargar el manual del curso. Aqui encuentras la
-            guia general y las lecturas resumidas.
-          </Text>
-          <View style={styles.infoBox}>
-            <MaterialIcons name="info" size={18} color={COLORS.primary} />
-            <Text style={styles.infoText}>
-              Recomendado para repasar en casa o cuando no tengas conexion.
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View
+          style={[
+            styles.content,
+            { flexDirection: isTablet ? "row" : "column" },
+          ]}
+        >
+          <View style={styles.hero}>
+            <MaterialIcons name="menu-book" size={40} color="#fff" />
+            <Text style={[styles.heroTitle, isTablet && styles.heroTitleLarge]}>
+              Manual del curso
+            </Text>
+            <Text style={styles.heroSubtitle}>
+              Guia con instrucciones de uso y lecturas resumidas.
             </Text>
           </View>
-          <View style={styles.bulletRow}>
-            <MaterialIcons
-              name="check-circle"
-              size={16}
-              color={COLORS.primary}
-            />
-            <Text style={styles.bulletText}>Lecturas de los 6 modulos</Text>
+
+          <View style={styles.card}>
+            <Text style={styles.sectionTitle}>Descarga oficial</Text>
+            <Text style={styles.bodyText}>
+              Estas a punto de descargar el manual del curso. Aqui encuentras la
+              guia general y las lecturas resumidas.
+            </Text>
+            <View style={styles.infoBox}>
+              <MaterialIcons name="info" size={18} color={COLORS.primary} />
+              <Text style={styles.infoText}>
+                Recomendado para repasar en casa o cuando no tengas conexion.
+              </Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <MaterialIcons
+                name="check-circle"
+                size={16}
+                color={COLORS.primary}
+              />
+              <Text style={styles.bulletText}>Lecturas de los 6 modulos</Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <MaterialIcons
+                name="check-circle"
+                size={16}
+                color={COLORS.primary}
+              />
+              <Text style={styles.bulletText}>
+                Casos locales y prompts base
+              </Text>
+            </View>
+            <View style={styles.bulletRow}>
+              <MaterialIcons
+                name="check-circle"
+                size={16}
+                color={COLORS.primary}
+              />
+              <Text style={styles.bulletText}>Guia para usar la app</Text>
+            </View>
+            <TouchableOpacity
+              style={[
+                styles.primaryButton,
+                { width: isTablet ? "50%" : "100%" },
+              ]}
+              onPress={handleManualDownload}
+            >
+              <MaterialIcons name="picture-as-pdf" size={20} color="#fff" />
+              <Text style={styles.primaryButtonText}>Descargar manual PDF</Text>
+            </TouchableOpacity>
+            {!!status && <Text style={styles.statusText}>{status}</Text>}
           </View>
-          <View style={styles.bulletRow}>
-            <MaterialIcons
-              name="check-circle"
-              size={16}
-              color={COLORS.primary}
-            />
-            <Text style={styles.bulletText}>Casos locales y prompts base</Text>
-          </View>
-          <View style={styles.bulletRow}>
-            <MaterialIcons
-              name="check-circle"
-              size={16}
-              color={COLORS.primary}
-            />
-            <Text style={styles.bulletText}>Guia para usar la app</Text>
-          </View>
-          <TouchableOpacity
-            style={[styles.primaryButton, { width: isTablet ? "50%" : "100%" }]}
-            onPress={handleManualDownload}
-          >
-            <MaterialIcons name="picture-as-pdf" size={20} color="#fff" />
-            <Text style={styles.primaryButtonText}>Descargar manual PDF</Text>
-          </TouchableOpacity>
-          {!!status && <Text style={styles.statusText}>{status}</Text>}
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -107,6 +118,9 @@ const styles = StyleSheet.create({
     padding: 20,
     gap: 14,
     flexWrap: "wrap",
+  },
+  scrollContent: {
+    paddingBottom: 24,
   },
   hero: {
     backgroundColor: COLORS.primary,
