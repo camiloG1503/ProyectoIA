@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "ProyectIA Puerto Tejada",
+    "slug": "ProyectIA",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#D32F2F"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.puertotejada.proyectia"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#D32F2F",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "package": "com.puertotejada.proyectia",
+      "softwareKeyboardLayoutMode": "resize"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "name": "ProyectIA - Puerto Tejada",
+      "shortName": "ProyectIA",
+      "lang": "es-CO",
+      "themeColor": "#D32F2F",
+      "backgroundColor": "#1B5E20",
+      "display": "standalone",
+      "orientation": "portrait",
+      "scope": "/",
+      "startUrl": "/"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "your-project-id"
+      }
+    },
+    "plugins": [
+      "expo-sharing",
+      "expo-font",
+      "expo-video"
+    ]
+  }
+}
